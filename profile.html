@@ -153,7 +153,15 @@
         }
 
         .btn-main { background: var(--primary); color: white; }
-        .btn-outline { background: #eee; color: #333; }
+       .btn-outline { 
+    background: #ffffff; 
+    color: var(--primary); 
+    border: 1px solid var(--primary); 
+}
+.btn-outline:hover { 
+    background: #f0f7ff; 
+    transform: translateY(-2px); 
+}
         .btn-danger { background: #fee2e2; color: #ef4444; }
 
         @keyframes slideUp {
@@ -194,10 +202,12 @@
             <b id="user-email">Yuklanmoqda...</b>
         </div>
 
-        <div class="actions">
-            <a href="mashinalar.html" class="btn btn-main"><i class="fas fa-search"></i> Mashina band qilish</a>
-            <button onclick="logout()" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Chiqish</button>
-        </div>
+       <div class="actions">
+    <a href="index.html" class="btn btn-outline"><i class="fas fa-home"></i> Bosh sahifa</a>
+    
+    <a href="mashinalar.html" class="btn btn-main"><i class="fas fa-search"></i> Mashina band qilish</a>
+    <button onclick="logout()" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Chiqish</button>
+</div>
     </div>
 </div>
 
