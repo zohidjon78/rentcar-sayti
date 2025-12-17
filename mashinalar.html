@@ -760,19 +760,51 @@
     });
   });
 
-  // 5. Ijarani xotiraga yozish funksiyasi
-  function bookCar(carName) {
-    let rentals = JSON.parse(localStorage.getItem('myRentals')) || [];
+  // 5. Ijarani SERVERGA va xotiraga yozish funksiyasi
+  async function bookCar(carName) {
+    const userName = localStorage.getItem('userName');
     
-    let newBooking = {
-        name: carName,
-        date: new Date().toLocaleDateString()
+    // 1. Avval foydalanuvchi tizimga kirganini tekshiramiz
+    if (!userName) {
+      alert("Iltimos, avval tizimga kiring!");
+      window.location.href = "login.html";
+      return;
+    }
+
+    // 2. Serverga yuboriladigan ma'lumot obyekti
+    const orderData = {
+      userName: userName,
+      carName: carName,
+      paymentMethod: "Sayt orqali (Premium)" // Standart qiymat
     };
-    
-    rentals.push(newBooking);
-    localStorage.setItem('myRentals', JSON.stringify(rentals));
-    
-    alert(carName + " muvaffaqiyatli band qilindi! Profilingizdan tekshirishingiz mumkin.");
+
+    try {
+      // 3. Render backend serveriga so'rov yuboramiz
+      const response = await fetch('https://rentcar-backend-dnq1.onrender.com/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderData)
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // 4. Agar serverga muvaffaqiyatli saqlansa, local xotiraga ham yozamiz
+        let rentals = JSON.parse(localStorage.getItem('myRentals')) || [];
+        rentals.push({ name: carName, date: new Date().toLocaleDateString() });
+        localStorage.setItem('myRentals', JSON.stringify(rentals));
+
+        alert(carName + " muvaffaqiyatli band qilindi! ✅");
+        console.log("Serverdan javob:", result);
+      } else {
+        alert("Xatolik: " + (result.error || "Buyurtma qabul qilinmadi"));
+      }
+    } catch (error) {
+      console.error("Server bilan bog'lanishda xato:", error);
+      alert("Server bilan aloqa uzildi. Iltimos, keyinroq urinib ko'ring.");
+    }
   }
 </script>
 </body>
