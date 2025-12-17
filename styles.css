@@ -1,0 +1,200 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+/* 1. Logotip va navigatsiya qismlari - o'zgarishsiz qoldi */
+.header-logo-img {
+    height: 40px; 
+    width: auto; 
+    vertical-align: middle; 
+    margin-right: 30px; 
+}
+
+.navbar .logo { 
+    font-size: 2rem;
+    color: white;
+    font-weight: bold;
+    display: flex; 
+    align-items: center; 
+    padding: 0; 
+    margin: 0;
+}
+
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif; /* Shu yerga Poppins qo'shildi */
+}
+
+/* --- BODY FONIGA RASM --- */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(rgba(245, 247, 250, 0.85), rgba(245, 247, 250, 0.85)), 
+                url('https://images.unsplash.com/photo-1486497395442-885e219fbf0a?q=80&w=2070&auto=format&fit=crop'); 
+    background-attachment: fixed; 
+    background-size: cover;
+    background-position: center;
+    color: #333;
+}
+
+/* Loader */
+#loader {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: #000 url('loader.gif') no-repeat center center;
+    z-index: 1000;
+}
+
+/* Header */
+header {
+    background-color: #111;
+    padding: 1rem 0;
+    position: sticky; /* Tepada qotib turishi uchun */
+    top: 0;
+    z-index: 999;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.8rem; /* Aloqa bo'limidagidek hajm */
+    color: white;
+    font-weight: 700;  /* Qalinroq */
+    letter-spacing: 1px; /* Harflar orasidagi masofa */
+    text-transform: uppercase; /* Hammasini katta harf qilish (ixtiyoriy) */
+}
+
+/* --- NAVIGATSIYA ANIMATSIYASI (Siz so'ragan qism) --- */
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-links a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.95rem; /* Biroz kichikroq va zamonaviy */
+    font-weight: 500;   /* O'rtacha qalinlik */
+    position: relative;
+    transition: color 0.3s;
+}
+
+/* Pastdagi sariq chiziqchaning boshlang'ich holati */
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0; /* Boshida ko'rinmaydi */
+    height: 2px;
+    background: #ffd700; /* Sariq/Oltin rang */
+    bottom: 0;
+    left: 0;
+    transition: width 0.3s ease; /* Sekin cho'zilish effekti */
+}
+
+/* Hover bo'lganda va aktiv sahifada chiziqcha 100% cho'ziladi */
+.nav-links a:hover::after,
+.nav-links a.active::after {
+    width: 100%;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: #ffd700;
+}
+/* -------------------------------------------------- */
+
+/* Main */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h2 {
+    text-align: center;
+    margin: 2rem 0;
+    font-size: 2.5rem;
+    color: #222;
+}
+
+/* Filter */
+.filter-container {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+#filterSelect {
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    background-color: white;
+}
+
+/* Car Grid */
+.car-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.car-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+}
+
+.car-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.car-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.car-card h3 {
+    margin: 1rem;
+    font-size: 1.5rem;
+}
+
+.car-card p {
+    margin: 0 1rem 1rem;
+    font-size: 1rem;
+    color: #555;
+}
+
+.car-card .btn {
+    display: block;
+    text-align: center;
+    background: black;
+    color: #fff;
+    margin: 1rem;
+    padding: 0.7rem;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.car-card .btn:hover {
+    background: #333;
+}
+
+/* Footer */
+footer {
+    background: #111;
+    color: #aaa;
+    padding: 2rem 0;
+    text-align: center;
+    margin-top: 3rem;
+}

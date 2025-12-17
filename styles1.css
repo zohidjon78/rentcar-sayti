@@ -1,0 +1,184 @@
+
+.header-logo-img {
+    height: 40px; /* Logotipning balandligi */
+    width: auto; /* Kengligini avtomatik qiladi */
+    vertical-align: middle; /* Navigatsiya elementlari bilan bir tekis turishi uchun */
+    /* MASOFANI OSHIRISH: Logotipdan keyin 30px bo'sh joy qoldiramiz */
+    margin-right: 30px; 
+}
+
+/* 2. Logo konteynerini sozlash */
+.navbar .logo { 
+    /* Bu uslub sizning kodingizda bor, faqat to'g'rilash uchun tozalaymiz */
+    font-size: 2rem;
+    color: white;
+    font-weight: bold;
+    /* Rasmli logotip ishlatilganida faqat rasm paydo bo'lishi uchun */
+    display: flex; 
+    align-items: center; 
+    padding: 0; 
+    margin: 0;
+}
+:root {
+  --main-dark: #0f172a;
+  --accent-gold: #fbbf24;
+  --primary-blue: #2563eb;
+  --soft-bg: #f8fafc;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--soft-bg);
+  overflow-x: hidden;
+}
+
+/* Header & Nav */
+.custom-header {
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 15px 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo-area { display: flex; align-items: center; gap: 10px; }
+.logo-brand { color: white; font-size: 1.6rem; font-weight: 700; }
+.logo-brand span { color: var(--accent-gold); }
+.nav-logo-img { height: 40px; }
+
+.nav-menu { display: flex; list-style: none; gap: 25px; margin: 0; }
+.nav-menu a { color: #cbd5e1; text-decoration: none; font-weight: 500; transition: 0.3s; }
+.nav-menu a:hover, .nav-menu a.active { color: var(--accent-gold); }
+
+/* Hero Section */
+.about-hero {
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+              url('https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=1920');
+  background-size: cover;
+  background-position: center;
+  height: 40vh;
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+/* Stats & Video */
+.section-title { font-weight: 700; margin-bottom: 20px; position: relative; }
+.section-title::after {
+  content: ''; position: absolute; left: 0; bottom: -5px;
+  width: 50px; height: 3px; background: var(--primary-blue);
+}
+
+.stat-box {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+  text-align: center;
+  transition: 0.3s;
+}
+.stat-box h3 { color: var(--primary-blue); font-weight: 700; margin: 0; }
+.stat-box span { font-size: 0.9rem; color: #64748b; }
+
+.video-container-wrapper {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(37, 99, 235, 0.2);
+  border: 4px solid white;
+}
+
+/* Feature Cards */
+.feature-card {
+  background: white;
+  padding: 40px 25px;
+  border-radius: 20px;
+  transition: 0.4s;
+  height: 100%;
+  border-bottom: 4px solid transparent;
+}
+.feature-card:hover {
+  transform: translateY(-10px);
+  border-bottom-color: var(--accent-gold);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+.feature-card i {
+  font-size: 2.5rem;
+  color: var(--primary-blue);
+  margin-bottom: 15px;
+  display: inline-block;
+}
+
+/* Footer */
+.modern-footer {
+  background: var(--main-dark);
+  color: white;
+  padding: 40px 0;
+  margin-top: 80px;
+}
+.footer-socials a {
+  color: white;
+  font-size: 1.5rem;
+  margin: 0 15px;
+  transition: 0.3s;
+}
+.footer-socials a:hover { color: var(--accent-gold); }
+.accent-text { color: var(--accent-gold); font-weight: 600; }
+
+@media (max-width: 768px) {
+  .nav-menu { display: none; }
+  .about-hero { height: 30vh; }
+}
+/* Footer kengaytirilgan stili */
+.modern-footer {
+    background: #0f172a;
+    color: white;
+    padding: 60px 0 30px;
+    border-top: 2px solid rgba(255, 255, 255, 0.05);
+}
+
+.footer-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.footer-socials a {
+    color: white;
+    font-size: 1.8rem;
+    margin-right: 20px;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.footer-socials a:hover {
+    color: #fbbf24; /* Oltin rang */
+    transform: translateY(-5px);
+}
+
+/* Hamkor kanallar tugmalari (Badges) */
+.partner-links .partner-item {
+    text-decoration: none;
+}
+
+.partner-links .badge {
+    padding: 10px 15px;
+    font-weight: 400;
+    transition: 0.3s;
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: #cbd5e1;
+}
+
+.partner-links .badge:hover {
+    background: #2563eb !important; /* Ko'k rang */
+    color: white;
+    border-color: #2563eb !important;
+}
+
+.accent-text {
+    color: #fbbf24;
+    font-weight: 700;
+}

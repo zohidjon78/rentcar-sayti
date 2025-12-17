@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RentCar - Ro'yxatdan O'tish</title>
+    <link rel="stylesheet" href="style22.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <div class="registration-container">
+        <div class="logo-area">
+            <h1>RentCar</h1>
+            <p>Avtomobil ijarasini oson qiling.</p>
+        </div>
+        
+        <div class="form-card">
+            <h2>Ro'yxatdan O'tish</h2>
+            <p class="subtitle">Boshlash uchun ma'lumotlaringizni kiriting.</p>
+
+            <form id="registrationForm">
+                <div class="input-group">
+                    <label for="name">Ism va Familiya</label>
+                    <input type="text" id="name" name="name" placeholder="Ismingizni kiriting:" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">Email manzil</label>
+                    <input type="email" id="email" name="email" placeholder="Emailingizni kiriting:" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Parol</label>
+                    <input type="password" id="password" name="password" placeholder="Kamida 8 belgi" required>
+                </div>
+
+                <div class="terms-check">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">Men <a href="#">Ijara shartlari</a> bilan roziman</label>
+                </div>
+
+                <button type="submit" class="register-button">Ro'yxatdan o'tish</button>
+            </form>
+
+            <div class="footer-link">
+                Hisobingiz bormi? <a href="login.html" id="loginLink">Tizimga Kirish</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Sahifa yangilanib ketishini to'xtatamiz
+            
+            // Ma'lumotlarni yig'amiz
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                // Serverga (Node.js) ma'lumot yuboramiz
+                const response = await fetch('http://localhost:3000/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Agar server bazaga saqlasa, keyin bosh sahifaga o'tamiz
+                    alert(data.message);
+                    window.location.href = "boshsahifa.html"; 
+                } else {
+                    // Agar xato bo'lsa (masalan email band bo'lsa)
+                    alert(data.error);
+                }
+            } catch (error) {
+                console.error("Xatolik:", error);
+                alert("Server o'chiq! Terminalda 'node server.js' ni yoqing.");
+            }
+        });
+
+        // Tizimga kirish havolasi uchun
+        document.getElementById('loginLink').addEventListener('click', function(e) {
+            // Agar login.html bo'lsa shunga o'tadi, bo'lmasa index/bosh sahifa
+            // e.preventDefault(); 
+            // window.location.href = "login.html"; 
+        });
+        window.onload = function() {
+    const user = localStorage.getItem('userName');
+    const loginLink = document.querySelector('a[href="login.html"]');
+
+    if (user && loginLink) {
+        // "Login" o'rniga ismni havola (link) sifatida qo'yamiz
+        loginLink.innerHTML = `👤 ${user}`;
+        loginLink.href = "profile.html"; // Endi ism bosilsa profilga o'tadi
+        loginLink.style.fontWeight = "bold";
+        loginLink.style.color = "#004aad";
+
+        // Chiqish tugmasini ham yoniga qo'shish (ixtiyoriy)
+        const logoutBtn = document.createElement('a');
+        logoutBtn.innerHTML = " <i class='fas fa-sign-out-alt'></i>";
+        logoutBtn.href = "#";
+        logoutBtn.style.marginLeft = "10px";
+        logoutBtn.style.color = "red";
+        logoutBtn.onclick = function() {
+            localStorage.removeItem('userName');
+            window.location.reload();
+        };
+        loginLink.parentNode.appendChild(logoutBtn);
+    }
+};
+    </script>
+</body>
+</html>

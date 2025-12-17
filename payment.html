@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xavfsiz To'lov - RentCar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #004aad;
+            --accent: #fbbf24;
+            --bg: #f4f7fe;
+            --text: #1e293b;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .payment-card {
+            background: white;
+            width: 100%;
+            max-width: 480px;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 74, 173, 0.1);
+            position: relative;
+            overflow: hidden;
+            padding: 40px;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            width: 40px;
+            height: 40px;
+            background: #f1f5f9;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text);
+            text-decoration: none;
+            transition: 0.3s;
+            border: 1px solid #e2e8f0;
+            z-index: 10;
+        }
+
+        .back-btn:hover { background: var(--primary); color: white; transform: scale(1.1); }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 { font-size: 1.8rem; color: var(--text); margin-bottom: 10px; text-align: center; }
+        
+        .car-badge {
+            background: #eef4ff;
+            color: var(--primary);
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 30px;
+            font-weight: 600;
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .method-item {
+            border: 2px solid #f1f5f9;
+            border-radius: 16px;
+            margin-bottom: 15px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .method-item:hover { border-color: var(--primary); background: #f8faff; }
+        
+        .method-item.active {
+            border-color: var(--primary);
+            background: #f8faff;
+            box-shadow: 0 10px 20px rgba(0, 74, 173, 0.05);
+        }
+
+        .method-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .method-title { display: flex; align-items: center; gap: 15px; font-weight: 600; color: var(--text); }
+        .method-title i { font-size: 1.2rem; color: var(--primary); }
+
+        .method-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            padding: 0 20px;
+        }
+
+        .method-item.active .method-content {
+            max-height: 300px;
+            padding-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            margin-top: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 74, 173, 0.1); }
+
+        .btn-pay {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-top: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-pay:hover { background: #003780; transform: translateY(-2px); }
+
+        .telegram-btn {
+            background: #24A1DE;
+            color: white;
+            text-decoration: none;
+            padding: 15px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        .telegram-btn:hover { background: #1d82b3; }
+
+        .logos { font-size: 0.7rem; font-weight: bold; }
+        .logos i { font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+
+<div class="payment-card">
+    <a href="javascript:history.back()" class="back-btn" title="Orqaga qaytish">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+
+    <h1>Xavfsiz to'lov</h1>
+    
+    <div class="car-badge">
+        <i class="fas fa-car"></i> Tanlangan: <span id="car-name">---</span>
+    </div>
+
+    <div class="method-item active" onclick="toggleMethod('uzcard')">
+        <div class="method-header">
+            <div class="method-title">
+                <i class="fas fa-credit-card"></i>
+                <span>Uzcard / Humo</span>
+            </div>
+            <div class="logos" style="color: #00bfff;">
+                UZCARD | HUMO
+            </div>
+        </div>
+        <div id="content-uzcard" class="method-content">
+            <input type="text" placeholder="8600 **** **** ****" maxlength="19" class="card-format">
+            <div style="display: flex; gap: 10px;">
+                <input type="text" placeholder="MM/YY" maxlength="5">
+                <input type="text" placeholder="PIN" maxlength="4">
+            </div>
+            <button class="btn-pay" onclick="process('Milliy Karta')">
+                <i class="fas fa-lock"></i> Tasdiqlash
+            </button>
+        </div>
+    </div>
+
+    <div class="method-item" onclick="toggleMethod('visa')">
+        <div class="method-header">
+            <div class="method-title">
+                <i class="fas fa-globe"></i>
+                <span>Visa / Mastercard</span>
+            </div>
+            <div class="logos">
+                <i class="fab fa-cc-visa" style="color:#1a1f71"></i>
+                <i class="fab fa-cc-mastercard" style="color:#eb001b"></i>
+            </div>
+        </div>
+        <div id="content-visa" class="method-content">
+            <input type="text" placeholder="4000 **** **** ****" maxlength="19" class="card-format">
+            <div style="display: flex; gap: 10px;">
+                <input type="text" placeholder="MM/YY" maxlength="5">
+                <input type="text" placeholder="CVC" maxlength="3">
+            </div>
+            <button class="btn-pay" onclick="process('Xalqaro Karta')">
+                <i class="fas fa-lock"></i> To'lash
+            </button>
+        </div>
+    </div>
+
+    <div class="method-item" onclick="toggleMethod('app')">
+        <div class="method-header">
+            <div class="method-title">
+                <i class="fas fa-mobile-alt"></i>
+                <span>Payme / Click</span>
+            </div>
+            <div class="logos" style="color: #00bfff;">
+                PAYME | CLICK
+            </div>
+        </div>
+        <div id="content-app" class="method-content">
+            <p style="font-size: 0.8rem; color: #64748b;">Telefon raqamingizni kiriting:</p>
+            <input type="tel" value="+998 " id="phone-app">
+            <button class="btn-pay" onclick="process('Ilova orqali')">
+                Hisob yuborish
+            </button>
+        </div>
+    </div>
+
+    <p style="text-align: center; color: #94a3b8; font-size: 0.8rem; margin: 20px 0 10px;">Yoki menejer orqali:</p>
+    <a href="https://t.me/zohid_box1ng" target="_blank" class="telegram-btn">
+        <i class="fab fa-telegram-plane"></i> Telegram orqali bog'lanish
+    </a>
+</div>
+
+<script>
+    // 1. Mashina nomini URL'dan olish
+    const car = new URLSearchParams(window.location.search).get('car') || "Noma'lum";
+    document.getElementById('car-name').innerText = car;
+
+    // 2. Metodlarni almashtirish
+    function toggleMethod(type) {
+        document.querySelectorAll('.method-item').forEach(item => item.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+    }
+
+    // 3. Karta raqamini formatlash (8600 0000...)
+    document.querySelectorAll('.card-format').forEach(input => {
+        input.addEventListener('input', function (e) {
+            e.target.value = e.target.value.replace(/[^\d]/g, '').replace(/(.{4})/g, '$1 ').trim();
+        });
+    });
+
+    // 4. ASOSIY FUNKSIYA: Serverga yuborish
+    async function process(method) {
+        const btn = event.currentTarget;
+        const carName = document.getElementById('car-name').innerText;
+        const userName = localStorage.getItem('userName'); // Tizimga kirgan ismni olamiz
+
+        // Xavfsizlik tekshiruvlari
+        if (!userName) {
+            alert("Iltimos, avval tizimga kiring!");
+            window.location.href = "login.html";
+            return;
+        }
+
+        if (carName === "---" || carName === "Noma'lum") {
+            alert("Xato: Mashina tanlanmagan!");
+            return;
+        }
+
+        // Tugmani kutish holatiga o'tkazish
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Bazaga yozilmoqda...';
+        btn.disabled = true;
+
+        try {
+            // SERVERGA SO'ROV YUBORISH
+            const response = await fetch('http://localhost:3000/api/orders', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    userName: userName,
+                    carName: carName,
+                    paymentMethod: method
+                })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                // Muvaffaqiyatli bo'lsa
+                alert("Muvaffaqiyatli! " + carName + " ijaraga olindi va bazaga saqlandi. ✅");
+                window.location.href = "profile.html"; 
+            } else {
+                // Server xato qaytarsa
+                alert("Xatolik: " + result.error);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+
+        } catch (error) {
+            // Server umuman ishlamayotgan bo'lsa
+            console.error("Server xatosi:", error);
+            alert("Server bilan aloqa o'rnatib bo'lmadi! Server ishlayotganini tekshiring.");
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    }
+
+    // 5. Sahifa yuklanganda foydalanuvchini tekshirish
+    window.onload = function() {
+        const user = localStorage.getItem('userName');
+        const loginLink = document.querySelector('a[href="login.html"]');
+        if (user && loginLink) {
+            loginLink.innerHTML = `👤 ${user}`;
+            loginLink.href = "profile.html";
+            loginLink.style.fontWeight = "bold";
+        }
+    };
+</script>
+</body>
+</html>

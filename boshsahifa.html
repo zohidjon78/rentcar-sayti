@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RentCar - Premium Avtomobillar Ijarasi</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-red: #e63946;
+            --dark-bg: #111111;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Navigatsiya */
+        .navbar {
+            backdrop-filter: blur(15px);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px 0;
+            transition: 0.3s;
+        }
+
+        .navbar-brand img {
+            height: 45px;
+            margin-right: 10px;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            margin: 0 10px;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-red) !important;
+        }
+
+        /* Hero Bo'limi */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1920&auto=format&fit=crop') no-repeat center center/cover;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            color: white;
+            padding-top: 80px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .btn-modern {
+            padding: 12px 35px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: 0.4s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-main {
+            background-color: var(--primary-red);
+            color: white;
+            border: none;
+            box-shadow: 0 10px 20px rgba(230, 57, 70, 0.3);
+        }
+
+        .btn-main:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(230, 57, 70, 0.4);
+            background-color: #c32f3a;
+            color: white;
+        }
+
+        /* Xizmatlar Bo'limi */
+        .feature-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: 0.3s;
+            height: 100%;
+            border-bottom: 4px solid transparent;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-bottom: 4px solid var(--primary-red);
+        }
+
+        .icon-box {
+            width: 70px;
+            height: 70px;
+            background: #fff5f5;
+            color: var(--primary-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+        }
+
+        /* CTA Bo'limi */
+        .cta-section {
+            background: var(--dark-bg);
+            padding: 100px 0;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: var(--primary-red);
+            filter: blur(150px);
+            opacity: 0.1;
+        }
+
+        /* Footer */
+        footer {
+            background: #0a0a0a;
+            color: #888;
+            padding: 60px 0 30px;
+        }
+
+        .footer-link {
+            color: #888;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .footer-link:hover {
+            color: white;
+        }
+
+        #user-profile-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Mobile optimization */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="data:image/jpeg;base64,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" alt="RentCar logotipi" class="header-logo-img">RENTCAR  </h1>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link active" href="boshsahifa.html">Bosh sahifa</a></li>
+                    <li class="nav-item"><a class="nav-link" href="mashinalar.html">Mashinalar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="aloqa.html">Aloqa</a></li>
+                    <li class="nav-item"><a class="nav-link" href="bizhaqimizda.html">Biz haqimizda</a></li>
+                    <li class="nav-item" id="auth-area">
+                        <a class="btn btn-modern btn-main btn-sm ms-lg-3" href="login.html">Kirish</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8" data-aos="fade-right" data-aos-duration="1000">
+                    <h5 class="text-uppercase fw-bold mb-3" style="color: var(--primary-red); letter-spacing: 3px;">Premium Sifat</h5>
+                    <h1>Yo'llaringizni biz bilan <br><span style="color: var(--primary-red);">yanada qulay</span> qiling</h1>
+                    <p class="lead mb-5 opacity-75">O'zbekistondagi eng tezkor va ishonchli avtomobil ijarasi xizmati. Bir necha daqiqada bron qiling!</p>
+                    <div class="d-flex gap-3">
+                        <a href="mashinalar.html" class="btn btn-modern btn-main">Mashinalarni ko‘rish</a>
+                        <a href="bizhaqimizda.html" class="btn btn-modern btn-outline-light">Batafsil</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 my-5">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h6 class="text-danger fw-bold text-uppercase">Nega biz?</h6>
+                <h2 class="fw-bold h1">Bizning afzalliklarimiz</h2>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-card">
+                        <div class="icon-box"><i class="fas fa-headset"></i></div>
+                        <h4 class="fw-bold">24/7 Yordam</h4>
+                        <p class="text-muted">Istalgan vaqtda, istalgan joyda muammolaringizni hal qilishga tayyormiz.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-card">
+                        <div class="icon-box"><i class="fas fa-car-side"></i></div>
+                        <h4 class="fw-bold">Yangi Avtopark</h4>
+                        <p class="text-muted">Barcha mashinalarimiz texnik ko'rikdan o'tgan va ideal holatda.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-card">
+                        <div class="icon-box"><i class="fas fa-wallet"></i></div>
+                        <h4 class="fw-bold">Hamyonbop Narx</h4>
+                        <p class="text-muted">Yashirin to'lovlarsiz, shaffof va arzon narxlar tizimi.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container text-center" data-aos="zoom-in">
+            <h2 class="display-5 fw-bold mb-4">Sayohatni bugun boshlang!</h2>
+            <p class="lead mb-5 opacity-75">Bizning menejerlarimiz sizga eng mos avtomobilni tanlashda yordam berishadi.</p>
+            <a href="aloqa.html" class="btn btn-modern btn-main btn-lg">Hozir bog'lanish</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <h4 class="text-white fw-bold mb-4">RENTCAR</h4>
+                    <p>Biz bilan har qanday masofani oson va qulay bosib o'ting. Sifat va ishonch bizning ustuvor vazifamizdir.</p>
+                </div>
+                <div class="col-lg-4 text-lg-center">
+                    <h5 class="text-white mb-4">Tezkor havolalar</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="footer-link">Bosh sahifa</a></li>
+                        <li><a href="#" class="footer-link">Mashinalar</a></li>
+                        <li><a href="#" class="footer-link">Foydalanish shartlari</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h5 class="text-white mb-4">Biz bilan bog'lanish</h5>
+                    <p><i class="fas fa-map-marker-alt me-2 text-danger"></i> Toshkent sh., Chilonzor tumani</p>
+                    <p><i class="fas fa-phone me-2 text-danger"></i> +998 90 123 45 67</p>
+                </div>
+            </div>
+            <hr class="mt-5 mb-4 border-secondary">
+            <div class="text-center">
+                <p class="small mb-0">&copy; 2025 RentCar. Barcha huquqlar himoyalangan.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Animatsiyani ishga tushirish
+        AOS.init({ once: true });
+
+        // User Login holati
+        window.onload = function() {
+            const user = localStorage.getItem('userName');
+            const authArea = document.getElementById('auth-area');
+
+            if (user) {
+                authArea.innerHTML = `
+                    <div id="user-profile-box">
+                        <a href="profile.html" class="text-white text-decoration-none fw-bold">
+                             <i class="fas fa-user-circle me-1"></i> ${user}
+                        </a>
+                        <button class="btn btn-sm btn-outline-danger border-0" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                `;
+            }
+        };
+
+        function logout() {
+            localStorage.removeItem('userName');
+            window.location.reload();
+        }
+
+        // Scroll bo'lganda navbar fonini o'zgartirish
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                document.querySelector('.navbar').style.background = 'rgba(0, 0, 0, 0.95)';
+            } else {
+                document.querySelector('.navbar').style.background = 'rgba(0, 0, 0, 0.8)';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,251 @@
+
+.header-logo-img {
+    height: 40px; /* Logotipning balandligi */
+    width: auto; /* Kengligini avtomatik qiladi */
+    vertical-align: middle; /* Navigatsiya elementlari bilan bir tekis turishi uchun */
+    /* MASOFANI OSHIRISH: Logotipdan keyin 30px bo'sh joy qoldiramiz */
+    margin-right: 30px; 
+}
+
+/* 2. Logo konteynerini sozlash */
+.navbar .logo { 
+    /* Bu uslub sizning kodingizda bor, faqat to'g'rilash uchun tozalaymiz */
+    font-size: 2rem;
+    color: white;
+    font-weight: bold;
+    /* Rasmli logotip ishlatilganida faqat rasm paydo bo'lishi uchun */
+    display: flex; 
+    align-items: center; 
+    padding: 0; 
+    margin: 0;
+}
+:root {
+  --primary-color: #004aad;
+  --secondary-color: #00c6ff;
+  --accent-color: #ffc107;
+  --text-dark: #1a1a1a;
+  --text-light: #ffffff;
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --grad: linear-gradient(135deg, #004aad 0%, #00c6ff 100%);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background: url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=1920') no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
+  color: var(--text-dark);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* --- Navigation --- */
+.main-header {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 15px 0;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logo-text {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.logo-text span { color: var(--secondary-color); }
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 30px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.3s;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  background: var(--accent-color);
+  bottom: -5px;
+  left: 0;
+  transition: 0.3s;
+}
+
+.nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+/* --- Contact Section (Glassmorphism) --- */
+.content-wrapper {
+  padding: 80px 0;
+}
+
+.glass-container {
+  background: var(--glass-bg);
+  backdrop-filter: blur(15px);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+}
+
+/* Chap taraf */
+.contact-info-card {
+  background: var(--grad);
+  color: white;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.contact-info-card h2 { font-size: 2.5rem; margin-bottom: 20px; }
+
+.info-items { margin: 40px 0; }
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.info-item i { font-size: 1.2rem; color: var(--accent-color); }
+
+.info-item a { color: white; text-decoration: none; }
+
+.social-links { display: flex; gap: 20px; }
+
+.social-links a {
+  width: 45px;
+  height: 45px;
+  background: rgba(255,255,255,0.1);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: white;
+  transition: 0.3s;
+}
+
+.social-links a:hover { background: var(--accent-color); transform: translateY(-5px); }
+
+/* Forma qismi */
+.contact-form-wrapper { padding: 60px; background: white; }
+
+.input-group {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.input-group input, .input-group textarea {
+  width: 100%;
+  padding: 12px 0;
+  border: none;
+  border-bottom: 2px solid #ddd;
+  background: transparent;
+  outline: none;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+
+.input-group label {
+  position: absolute;
+  left: 0;
+  top: 12px;
+  color: #999;
+  pointer-events: none;
+  transition: 0.3s;
+}
+
+.input-group input:focus ~ label,
+.input-group input:not(:placeholder-shown) ~ label,
+.input-group textarea:focus ~ label,
+.input-group textarea:not(:placeholder-shown) ~ label {
+  top: -15px;
+  font-size: 0.85rem;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.input-group input:focus, .input-group textarea:focus {
+  border-color: var(--primary-color);
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 15px;
+  background: var(--grad);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  transition: 0.4s;
+}
+
+.submit-btn:hover {
+  box-shadow: 0 10px 20px rgba(0, 74, 173, 0.3);
+  transform: scale(1.02);
+}
+
+/* Footer */
+footer {
+  padding: 30px 0;
+  background: #111;
+  color: #777;
+  text-align: center;
+}
+
+.footer-logo { color: var(--secondary-color); font-weight: bold; }
+
+/* Responsive */
+@media (max-width: 992px) {
+  .contact-grid { grid-template-columns: 1fr; }
+  .contact-info-card { padding: 40px; }
+}
+
+@media (max-width: 768px) {
+  .nav-links { display: none; } /* Mobil menyu uchun hamburger kerak bo'ladi */
+}

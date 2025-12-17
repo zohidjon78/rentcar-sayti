@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RentCar - Kirish</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #004aad;
+            --secondary-color: #003780;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --bg-color: #f8fafc;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg-color);
+            background-image: radial-gradient(#cbd5e1 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- MODERN NAVBAR --- */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 0 5%;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 35px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Hozirgi sahifa belgisi */
+        .nav-links a.active {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 100px 20px 40px 20px;
+        }
+
+        .login-card { 
+            background: white; 
+            padding: 45px 40px; 
+            border-radius: 24px; 
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.08); 
+            width: 100%; 
+            max-width: 420px; 
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 { margin-bottom: 8px; color: var(--text-dark); text-align: center; font-size: 1.75rem; font-weight: 700; }
+        .subtitle { color: var(--text-gray); text-align: center; margin-bottom: 35px; font-size: 0.95rem; }
+
+        .input-group { margin-bottom: 22px; }
+        label { display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-dark); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 16px;
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        input { 
+            width: 100%; 
+            padding: 14px 14px 14px 48px; 
+            border: 1.5px solid #e2e8f0; 
+            border-radius: 14px; 
+            font-size: 1rem; 
+            transition: all 0.3s ease;
+            color: var(--text-dark);
+        }
+
+        input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(0, 74, 173, 0.08);
+            outline: none;
+        }
+
+        .login-button { 
+            width: 100%; 
+            padding: 16px; 
+            background: var(--primary-color); 
+            color: white; 
+            border: none; 
+            border-radius: 14px; 
+            font-size: 1rem; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: 0.3s;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .login-button:hover { 
+            background: var(--secondary-color); 
+            box-shadow: 0 10px 20px rgba(0, 74, 173, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .footer-link { text-align: center; margin-top: 25px; font-size: 0.95rem; color: var(--text-gray); }
+        .footer-link a { color: var(--primary-color); text-decoration: none; font-weight: 700; border-bottom: 1px solid transparent; transition: 0.3s; }
+        .footer-link a:hover { border-bottom-color: var(--primary-color); }
+
+        @media (max-width: 600px) {
+            .nav-links { display: none; }
+            .login-card { padding: 30px 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="boshsahifa.html" class="logo">RENT<span style="color: var(--text-dark)">CAR</span></a>
+        <ul class="nav-links">
+            <li><a href="boshsahifa.html">Bosh sahifa</a></li>
+            <li><a href="mashinalar.html">Mashinalar</a></li>
+            <li><a href="bizhaqimizda.html">Biz haqimizda</a></li>
+            <li><a href="aloqa.html">Aloqa</a></li>
+            <li><a href="login.html" class="active">Kirish</a></li>
+        </ul>
+        <div style="width: 80px;"></div> </nav>
+
+    <div class="main-container">
+        <div class="login-card">
+            <h2>Xush kelibsiz!</h2>
+            <p class="subtitle">Email va parolingiz orqali tizimga kiring.</p>
+
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-envelope"></i>
+                        <input type="email" id="email" placeholder="Emailingizni kiriting" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Parol</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="password" placeholder="Parolingizni kiriting" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-button">
+                    Kirish <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                </button>
+            </form>
+
+            <div class="footer-link">
+                Hisobingiz yo'qmi? <a href="registration.html">Ro'yxatdan o'tish</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    try {
+        const response = await fetch('http://localhost:3000/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert("Xush kelibsiz, " + data.userName + "!");
+            
+            // XOTIRAGA SAQLASH
+            localStorage.setItem('userName', data.userName); 
+            localStorage.setItem('userEmail', data.userEmail); // Emailni ham saqlaymiz
+
+            window.location.href = "mashinalar.html"; 
+        } else {
+            alert(data.error);
+        }
+    } catch (error) {
+        console.error("Xatolik:", error);
+        alert("Server bilan ulanishda xato yuz berdi!");
+    }
+});
+
+// Sahifa yuklanganda menyuni yangilash
+window.onload = function() {
+    const user = localStorage.getItem('userName');
+    const loginLink = document.querySelector('a[href="login.html"]');
+
+    if (user && loginLink) {
+        loginLink.innerHTML = `👤 ${user}`;
+        loginLink.href = "profile.html";
+        loginLink.style.fontWeight = "bold";
+        loginLink.style.color = "#004aad";
+
+        const logoutBtn = document.createElement('a');
+        logoutBtn.innerHTML = " <i class='fas fa-sign-out-alt'></i>";
+        logoutBtn.href = "#";
+        logoutBtn.style.marginLeft = "10px";
+        logoutBtn.style.color = "red";
+        logoutBtn.onclick = function() {
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userEmail'); // Emailni ham o'chiramiz
+            window.location.reload();
+        };
+        loginLink.parentNode.appendChild(logoutBtn);
+    }
+};
+    </script>
+</body>
+</html>
