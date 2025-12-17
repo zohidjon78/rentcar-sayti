@@ -244,7 +244,7 @@
 
         try {
             // Serverga so'rov yuborish
-            const response = await fetch(`http://localhost:3000/api/orders/${encodeURIComponent(userName)}`);
+            const response = await fetch(`https://rentcar-backend-dnq1.onrender.com/api/orders/${encodeURIComponent(userName)}`);
             
             if (!response.ok) throw new Error('Ma\'lumot olishda xatolik');
 
