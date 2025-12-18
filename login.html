@@ -72,7 +72,6 @@
             color: var(--primary-color);
         }
 
-        /* Hozirgi sahifa belgisi */
         .nav-links a.active {
             color: var(--primary-color);
             font-weight: 700;
@@ -191,9 +190,10 @@
             <li><a href="mashinalar.html">Mashinalar</a></li>
             <li><a href="bizhaqimizda.html">Biz haqimizda</a></li>
             <li><a href="aloqa.html">Aloqa</a></li>
-            <li><a href="login.html" class="active">Kirish</a></li>
+            <li><a href="login.html" class="active" id="userAuthLink">Kirish</a></li>
         </ul>
-        <div style="width: 80px;"></div> </nav>
+        <div style="width: 40px;"></div> 
+    </nav>
 
     <div class="main-container">
         <div class="login-card">
@@ -217,74 +217,88 @@
                     </div>
                 </div>
 
-                <button type="submit" class="login-button">
-                    Kirish <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                <button type="submit" class="login-button" id="submitBtn">
+                    <span>Kirish</span> <i class="fa-solid fa-arrow-right-to-bracket"></i>
                 </button>
             </form>
 
             <div class="footer-link">
-                Hisobingiz yo'qmi? <a href="registration.html">Ro'yxatdan o'tish</a>
+                Hisobingiz yo'qmi? <a href="register.html">Ro'yxatdan o'tish</a>
             </div>
         </div>
     </div>
 
     <script>
         document.getElementById('loginForm').addEventListener('submit', async function(event) {
-    event.preventDefault();
+            event.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+            // Tugmani yuklash holatiga o'tkazish
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Tekshirilmoqda...';
 
-    try {
-        const response = await fetch('https://rentcar-backend-dnq1.onrender.com/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
+            try {
+                const response = await fetch('https://rentcar-backend-dnq1.onrender.com/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Muvaffaqiyatli kirish
+                    localStorage.setItem('userName', data.userName); 
+                    localStorage.setItem('userEmail', data.userEmail);
+                    
+                    alert("Xush kelibsiz, " + data.userName + "!");
+                    window.location.href = "index.html"; 
+                } else {
+                    alert(data.error || "Email yoki parol noto'g'ri!");
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Kirish <i class="fa-solid fa-arrow-right-to-bracket"></i>';
+                }
+            } catch (error) {
+                console.error("Xatolik:", error);
+                alert("Server bilan ulanishda xato yuz berdi! Server uyg'onayotgan bo'lishi mumkin, 1 daqiqadan so'ng qayta urinib ko'ring.");
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Kirish <i class="fa-solid fa-arrow-right-to-bracket"></i>';
+            }
         });
 
-        const data = await response.json();
+        // Sahifa yuklanganda foydalanuvchi holatini tekshirish
+        window.onload = function() {
+            const user = localStorage.getItem('userName');
+            const authLink = document.getElementById('userAuthLink');
 
-        if (response.ok) {
-            alert("Xush kelibsiz, " + data.userName + "!");
-            
-            // XOTIRAGA SAQLASH
-            localStorage.setItem('userName', data.userName); 
-            localStorage.setItem('userEmail', data.userEmail); // Emailni ham saqlaymiz
+            if (user && authLink) {
+                authLink.innerHTML = `👤 ${user}`;
+                authLink.href = "profile.html";
+                authLink.classList.add('active');
+                authLink.style.color = "#004aad";
 
-            window.location.href = "mashinalar.html"; 
-        } else {
-            alert(data.error);
-        }
-    } catch (error) {
-        console.error("Xatolik:", error);
-        alert("Server bilan ulanishda xato yuz berdi!");
-    }
-});
-
-// Sahifa yuklanganda menyuni yangilash
-window.onload = function() {
-    const user = localStorage.getItem('userName');
-    const loginLink = document.querySelector('a[href="login.html"]');
-
-    if (user && loginLink) {
-        loginLink.innerHTML = `👤 ${user}`;
-        loginLink.href = "profile.html";
-        loginLink.style.fontWeight = "bold";
-        loginLink.style.color = "#004aad";
-
-        const logoutBtn = document.createElement('a');
-        logoutBtn.innerHTML = " <i class='fas fa-sign-out-alt'></i>";
-        logoutBtn.href = "#";
-        logoutBtn.style.marginLeft = "10px";
-        logoutBtn.style.color = "red";
-        logoutBtn.onclick = function() {
-            localStorage.removeItem('userName');
-            localStorage.removeItem('userEmail'); // Emailni ham o'chiramiz
-            window.location.reload();
+                // Chiqish tugmasini yaratish
+                const logoutBtn = document.createElement('a');
+                logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt" title="Chiqish"></i>';
+                logoutBtn.href = "#";
+                logoutBtn.style.marginLeft = "15px";
+                logoutBtn.style.color = "#ef4444";
+                logoutBtn.style.fontSize = "1.1rem";
+                
+                logoutBtn.onclick = function(e) {
+                    e.preventDefault();
+                    if(confirm("Tizimdan chiqmoqchimisiz?")) {
+                        localStorage.removeItem('userName');
+                        localStorage.removeItem('userEmail');
+                        window.location.href = "index.html";
+                    }
+                };
+                authLink.parentNode.appendChild(logoutBtn);
+            }
         };
-        loginLink.parentNode.appendChild(logoutBtn);
-    }
-};
     </script>
 </body>
 </html>
