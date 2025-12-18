@@ -5,24 +5,27 @@ const cors = require('cors');
 const app = express();
 
 // --- 1. MIDDLEWARE ---
-// CORS ni barcha so'rovlar uchun ochiq qilib qo'yamiz
 app.use(cors()); 
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
 // --- 2. MONGODB BAZASIGA ULANISH ---
-// DB_URI dagi appName va boshqa parametrlarni tozalab, eng barqaror ko'rinishga keltirdim
+// Bu yerda parolingiz zohid571 ekanligini Atlas-da tasdiqlaganingizga ishonch hosil qiling!
 const dbURI = 'mongodb+srv://rentcarr:zohid571@cluster0.bqauelt.mongodb.net/rentcar_db?retryWrites=true&w=majority';
 
 mongoose.connect(dbURI, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 30000, // Bazani qidirish vaqtini 30 soniyagacha uzaytirdik (Timeout oldini olish uchun)
+    socketTimeoutMS: 45000,         // Ma'lumot almashish vaqtini uzaytirdik
 })
     .then(() => console.log("Bulutli baza (MongoDB Atlas) bilan aloqa o'rnatildi! ✅"))
-    .catch(err => console.error("Bazada xato yuz berdi:", err));
+    .catch(err => {
+        console.error("❌ BAZADA XATO:");
+        console.error(err.message);
+    });
 
 // --- 3. MODELLAR ---
-// User modelida emailni unique qilish uchun index: true qo'shildi
 const User = mongoose.model('User', new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, index: true },
@@ -53,13 +56,10 @@ app.get('/', (req, res) => {
 app.post('/register', async (req, res) => {
     try {
         const { name, email, password } = req.body;
-        
-        // Oldin tekshiramiz, foydalanuvchi bormi?
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ error: "Bu email bilan ro'yxatdan o'tilgan!" });
         }
-
         console.log(`Yangi ro'yxatdan o'tish: ${name} (${email}) 👤`);
         const newUser = new User({ name, email, password });
         await newUser.save();
@@ -88,6 +88,7 @@ app.post('/login', async (req, res) => {
             userEmail: user.email 
         });
     } catch (error) {
+        console.log("Login jarayonida xato:", error.message);
         res.status(500).json({ error: "Serverda xatolik." });
     }
 });
@@ -113,6 +114,7 @@ app.post('/contact', async (req, res) => {
         await newMessage.save();
         res.status(201).json({ message: "Xabaringiz muvaffaqiyatli yuborildi! ✅" });
     } catch (error) {
+        console.log("Xabar saqlashda xato:", error.message);
         res.status(500).json({ error: "Xabarni saqlab bo'lmadi." });
     }
 });
@@ -139,7 +141,6 @@ app.get('/api/orders/:userName', async (req, res) => {
 });
 
 // --- 5. SERVERNI YOQISH ---
-// Render uchun PORT 10000 bo'lishi maqsadga muvofiq
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
     console.log(`Server ishlamoqda: Port ${PORT} 🚀`);
