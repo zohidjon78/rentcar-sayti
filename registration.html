@@ -49,71 +49,42 @@
         </div>
     </div>
     
-    <script>
-        document.getElementById('registrationForm').addEventListener('submit', async function(event) {
-            event.preventDefault(); // Sahifa yangilanib ketishini to'xtatamiz
-            
-            // Ma'lumotlarni yig'amiz
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+   <script>
+    document.getElementById('registrationForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); 
+        
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
 
-            try {
-                // Serverga (Node.js) ma'lumot yuboramiz
-                const response = await fetch('https://rentcar-backend-dnq1.onrender.com/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ name, email, password })
-                });
+        try {
+            const response = await fetch('https://rentcar-backend-dnq1.onrender.com/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, email, password })
+            });
 
-                const data = await response.json();
+            const data = await response.json();
 
-                if (response.ok) {
-                    // Agar server bazaga saqlasa, keyin bosh sahifaga o'tamiz
-                    alert(data.message);
-                    window.location.href = "index.html"; 
-                } else {
-                    // Agar xato bo'lsa (masalan email band bo'lsa)
-                    alert(data.error);
-                }
-            } catch (error) {
-                console.error("Xatolik:", error);
-                alert("Server o'chiq! Terminalda 'node server.js' ni yoqing.");
+            if (response.ok) {
+                // Xabarni chiqaramiz
+                alert("Muvaffaqiyatli ro'yxatdan o'tdingiz! Endi tizimga kiring.");
+                
+                // localStorage'ni tozalab tashlaymiz (har ehtimolga qarshi eski foydalanuvchi qolib ketmasin)
+                localStorage.clear();
+
+                // To'g'ridan-to'g'ri login sahifasiga yuboramiz
+                window.location.href = "login.html"; 
+            } else {
+                alert(data.error);
             }
-        });
-
-        // Tizimga kirish havolasi uchun
-        document.getElementById('loginLink').addEventListener('click', function(e) {
-            // Agar login.html bo'lsa shunga o'tadi, bo'lmasa index/bosh sahifa
-            // e.preventDefault(); 
-            // window.location.href = "login.html"; 
-        });
-        window.onload = function() {
-    const user = localStorage.getItem('userName');
-    const loginLink = document.querySelector('a[href="login.html"]');
-
-    if (user && loginLink) {
-        // "Login" o'rniga ismni havola (link) sifatida qo'yamiz
-        loginLink.innerHTML = `👤 ${user}`;
-        loginLink.href = "profile.html"; // Endi ism bosilsa profilga o'tadi
-        loginLink.style.fontWeight = "bold";
-        loginLink.style.color = "#004aad";
-
-        // Chiqish tugmasini ham yoniga qo'shish (ixtiyoriy)
-        const logoutBtn = document.createElement('a');
-        logoutBtn.innerHTML = " <i class='fas fa-sign-out-alt'></i>";
-        logoutBtn.href = "#";
-        logoutBtn.style.marginLeft = "10px";
-        logoutBtn.style.color = "red";
-        logoutBtn.onclick = function() {
-            localStorage.removeItem('userName');
-            window.location.reload();
-        };
-        loginLink.parentNode.appendChild(logoutBtn);
-    }
-};
-    </script>
+        } catch (error) {
+            console.error("Xatolik:", error);
+            alert("Server aloqaga chiqmayapti!");
+        }
+    });
+</script>
 </body>
 </html>
