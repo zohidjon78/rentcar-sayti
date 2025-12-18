@@ -5,21 +5,27 @@ const cors = require('cors');
 const app = express();
 
 // --- 1. MIDDLEWARE ---
+// CORS ni barcha so'rovlar uchun ochiq qilib qo'yamiz
 app.use(cors()); 
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
 // --- 2. MONGODB BAZASIGA ULANISH ---
-const dbURI = 'mongodb+srv://rentcarr:zohid_571@cluster0.bqauelt.mongodb.net/rentcar_db?retryWrites=true&w=majority&appName=Cluster0';
+// DB_URI dagi appName va boshqa parametrlarni tozalab, eng barqaror ko'rinishga keltirdim
+const dbURI = 'mongodb+srv://rentcarr:zohid_571@cluster0.bqauelt.mongodb.net/rentcar_db?retryWrites=true&w=majority';
 
-mongoose.connect(dbURI)
+mongoose.connect(dbURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
     .then(() => console.log("Bulutli baza (MongoDB Atlas) bilan aloqa o'rnatildi! ✅"))
     .catch(err => console.error("Bazada xato yuz berdi:", err));
 
 // --- 3. MODELLAR ---
+// User modelida emailni unique qilish uchun index: true qo'shildi
 const User = mongoose.model('User', new mongoose.Schema({
     name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true, index: true },
     password: { type: String, required: true }
 }));
 
@@ -47,13 +53,20 @@ app.get('/', (req, res) => {
 app.post('/register', async (req, res) => {
     try {
         const { name, email, password } = req.body;
+        
+        // Oldin tekshiramiz, foydalanuvchi bormi?
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ error: "Bu email bilan ro'yxatdan o'tilgan!" });
+        }
+
         console.log(`Yangi ro'yxatdan o'tish: ${name} (${email}) 👤`);
         const newUser = new User({ name, email, password });
         await newUser.save();
         res.status(201).json({ message: "Muvaffaqiyatli ro'yxatdan o'tdingiz! ✅" });
     } catch (error) {
         console.log("Ro'yxatdan o'tishda xato:", error.message);
-        res.status(400).json({ error: "Email band yoki ma'lumot noto'g'ri." });
+        res.status(500).json({ error: "Serverda xatolik yuz berdi." });
     }
 });
 
@@ -62,10 +75,12 @@ app.post('/login', async (req, res) => {
         const { email, password } = req.body;
         console.log(`Login so'rovi: ${email} 🔑`);
         const user = await User.findOne({ email });
+        
         if (!user || user.password !== password) {
             console.log("Login muvaffaqiyatsiz: Xato email yoki parol");
             return res.status(401).json({ error: "Email yoki parol noto'g'ri!" });
         }
+        
         console.log(`Foydalanuvchi tizimga kirdi: ${user.name} ✅`);
         res.status(200).json({ 
             message: "Xush kelibsiz!", 
@@ -102,7 +117,6 @@ app.post('/contact', async (req, res) => {
     }
 });
 
-// Qolgan GET yo'llari uchun ham loglar
 app.get('/api/user/:email', async (req, res) => {
     console.log(`Foydalanuvchi ma'lumoti so'raldi: ${req.params.email}`);
     try {
@@ -125,7 +139,8 @@ app.get('/api/orders/:userName', async (req, res) => {
 });
 
 // --- 5. SERVERNI YOQISH ---
-const PORT = process.env.PORT || 3000;
+// Render uchun PORT 10000 bo'lishi maqsadga muvofiq
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
     console.log(`Server ishlamoqda: Port ${PORT} 🚀`);
 });
