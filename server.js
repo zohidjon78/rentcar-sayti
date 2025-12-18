@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // --- 2. MONGODB BAZASIGA ULANISH ---
 // DB_URI dagi appName va boshqa parametrlarni tozalab, eng barqaror ko'rinishga keltirdim
-const dbURI = 'mongodb+srv://rentcarr:zohid_571@cluster0.bqauelt.mongodb.net/rentcar_db?retryWrites=true&w=majority';
+const dbURI = 'mongodb+srv://rentcarr:zohid571@cluster0.bqauelt.mongodb.net/rentcar_db?retryWrites=true&w=majority';
 
 mongoose.connect(dbURI, {
     useNewUrlParser: true,
