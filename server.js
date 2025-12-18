@@ -10,15 +10,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // --- 2. MONGODB BAZASIGA ULANISH ---
-// Bu yerda parolingiz zohid571 ekanligini Atlas-da tasdiqlaganingizga ishonch hosil qiling!
 const dbURI = 'mongodb+srv://rentcarr:zohid571@cluster0.bqauelt.mongodb.net/rentcar_db?retryWrites=true&w=majority';
 
-mongoose.connect(dbURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 30000, // Bazani qidirish vaqtini 30 soniyagacha uzaytirdik (Timeout oldini olish uchun)
-    socketTimeoutMS: 45000,         // Ma'lumot almashish vaqtini uzaytirdik
-})
+// Yangi versiyada qavs ichidagi ortiqcha sozlamalar (useNewUrlParser va h.k) olib tashlandi
+mongoose.connect(dbURI)
     .then(() => console.log("Bulutli baza (MongoDB Atlas) bilan aloqa o'rnatildi! ✅"))
     .catch(err => {
         console.error("❌ BAZADA XATO:");
@@ -60,12 +55,10 @@ app.post('/register', async (req, res) => {
         if (existingUser) {
             return res.status(400).json({ error: "Bu email bilan ro'yxatdan o'tilgan!" });
         }
-        console.log(`Yangi ro'yxatdan o'tish: ${name} (${email}) 👤`);
         const newUser = new User({ name, email, password });
         await newUser.save();
         res.status(201).json({ message: "Muvaffaqiyatli ro'yxatdan o'tdingiz! ✅" });
     } catch (error) {
-        console.log("Ro'yxatdan o'tishda xato:", error.message);
         res.status(500).json({ error: "Serverda xatolik yuz berdi." });
     }
 });
@@ -77,7 +70,6 @@ app.post('/login', async (req, res) => {
         const user = await User.findOne({ email });
         
         if (!user || user.password !== password) {
-            console.log("Login muvaffaqiyatsiz: Xato email yoki parol");
             return res.status(401).json({ error: "Email yoki parol noto'g'ri!" });
         }
         
@@ -88,7 +80,6 @@ app.post('/login', async (req, res) => {
             userEmail: user.email 
         });
     } catch (error) {
-        console.log("Login jarayonida xato:", error.message);
         res.status(500).json({ error: "Serverda xatolik." });
     }
 });
@@ -96,12 +87,10 @@ app.post('/login', async (req, res) => {
 app.post('/api/orders', async (req, res) => {
     try {
         const { userName, carName, paymentMethod } = req.body;
-        console.log(`Yangi buyurtma! Kimdan: ${userName}, Mashina: ${carName} 🚗`);
         const newOrder = new Order({ userName, carName, paymentMethod });
         await newOrder.save();
         res.status(201).json({ message: "Buyurtma bazaga saqlandi! ✅" });
     } catch (error) {
-        console.log("Buyurtma saqlashda xato:", error.message);
         res.status(500).json({ error: "Buyurtmani saqlab bo'lmadi." });
     }
 });
@@ -109,18 +98,15 @@ app.post('/api/orders', async (req, res) => {
 app.post('/contact', async (req, res) => {
     try {
         const { name, email, message } = req.body;
-        console.log(`Yangi xabar keldi! Kimdan: ${name} ✉️`);
         const newMessage = new Message({ name, email, message });
         await newMessage.save();
         res.status(201).json({ message: "Xabaringiz muvaffaqiyatli yuborildi! ✅" });
     } catch (error) {
-        console.log("Xabar saqlashda xato:", error.message);
         res.status(500).json({ error: "Xabarni saqlab bo'lmadi." });
     }
 });
 
 app.get('/api/user/:email', async (req, res) => {
-    console.log(`Foydalanuvchi ma'lumoti so'raldi: ${req.params.email}`);
     try {
         const user = await User.findOne({ email: req.params.email }, { password: 0 });
         if (!user) return res.status(404).json({ error: "Foydalanuvchi topilmadi" });
@@ -131,7 +117,6 @@ app.get('/api/user/:email', async (req, res) => {
 });
 
 app.get('/api/orders/:userName', async (req, res) => {
-    console.log(`${req.params.userName}ning buyurtmalari ko'rilmoqda 📋`);
     try {
         const orders = await Order.find({ userName: req.params.userName }).sort({ date: -1 });
         res.json(orders);
