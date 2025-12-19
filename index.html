@@ -11,154 +11,218 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <style>
-        :root {
-            --primary-red: #e63946;
-            --dark-bg: #111111;
-            --glass-bg: rgba(255, 255, 255, 0.1);
-        }
+    :root {
+        --primary-red: #e63946;
+        --dark-bg: #111111;
+        --glass-bg: rgba(255, 255, 255, 0.1);
+    }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
-            overflow-x: hidden;
-        }
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+        overflow-x: hidden;
+        margin: 0;
+    }
 
-        /* Navigatsiya */
+    /* --- NAVIGATSIYA --- */
+    .navbar {
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px); /* Safari uchun */
+        background: rgba(0, 0, 0, 0.85);
+        padding: 12px 0;
+        transition: 0.3s;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+    }
+
+    .navbar-brand img {
+        height: clamp(35px, 5vw, 45px); /* Logo hajmi ekran o'lchamiga qarab */
+        margin-right: 10px;
+    }
+
+    .nav-link {
+        font-weight: 500;
+        margin: 0 10px;
+        transition: 0.3s;
+        color: white !important;
+    }
+
+    .nav-link:hover {
+        color: var(--primary-red) !important;
+    }
+
+    /* --- HERO BO'LIMI --- */
+    .hero {
+        background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), 
+                    url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1920&auto=format&fit=crop') no-repeat center center/cover;
+        height: 100vh;
+        min-height: 600px; /* Kichik telefonlarda kontent siqilib qolmasligi uchun */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-align: center;
+        padding: 0 20px;
+    }
+
+    .hero-content {
+        max-width: 900px;
+        width: 100%;
+    }
+
+    .hero h1 {
+        font-size: clamp(2rem, 8vw, 4rem); /* Responsive font o'lchami */
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: 20px;
+    }
+
+    .hero p {
+        font-size: clamp(1rem, 3vw, 1.25rem);
+        margin-bottom: 30px;
+        opacity: 0.9;
+    }
+
+    .btn-modern {
+        padding: clamp(12px, 2vw, 15px) clamp(25px, 4vw, 40px);
+        border-radius: 50px;
+        font-weight: 600;
+        transition: 0.4s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.85rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-main {
+        background-color: var(--primary-red);
+        color: white;
+        border: none;
+        box-shadow: 0 10px 20px rgba(230, 57, 70, 0.3);
+    }
+
+    .btn-main:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 25px rgba(230, 57, 70, 0.4);
+        background-color: #c32f3a;
+        color: white;
+    }
+
+    /* --- XIZMATLAR BO'LIMI --- */
+    .features-section {
+        padding: 80px 0;
+    }
+
+    .feature-card {
+        background: white;
+        padding: 40px 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        transition: 0.3s;
+        height: 100%;
+        border-bottom: 4px solid transparent;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        border-bottom: 4px solid var(--primary-red);
+    }
+
+    .icon-box {
+        width: 70px;
+        height: 70px;
+        background: #fff5f5;
+        color: var(--primary-red);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 20px;
+        font-size: 1.8rem;
+        margin: 0 auto 25px;
+    }
+
+    /* --- CTA BO'LIMI --- */
+    .cta-section {
+        background: var(--dark-bg);
+        padding: clamp(60px, 10vw, 100px) 20px;
+        color: white;
+        text-align: center;
+    }
+
+    /* --- FOOTER --- */
+    footer {
+        background: #0a0a0a;
+        color: #888;
+        padding: 60px 20px 30px;
+        text-align: center;
+    }
+
+    .footer-link {
+        color: #888;
+        text-decoration: none;
+        transition: 0.3s;
+        margin: 0 10px;
+    }
+
+    .footer-link:hover {
+        color: white;
+    }
+
+    #user-profile-box {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 6px 18px;
+        border-radius: 50px;
+    }
+
+    /* --- MOBILE OPTIMIZATION --- */
+    @media (max-width: 768px) {
         .navbar {
-            backdrop-filter: blur(15px);
-            background: rgba(0, 0, 0, 0.8);
-            padding: 15px 0;
-            transition: 0.3s;
+            padding: 10px 0;
+        }
+        
+        /* Hero matnlarini moslash */
+        .hero h1 { 
+            font-size: 2.4rem; 
+            margin-top: 40px;
         }
 
-        .navbar-brand img {
-            height: 45px;
-            margin-right: 10px;
+        /* Nav menyusini mobilda yashirish yoki tartibga solish */
+        .nav-container {
+            flex-direction: column;
+            gap: 10px;
         }
 
-        .nav-link {
-            font-weight: 500;
-            margin: 0 10px;
-            transition: 0.3s;
+        /* Feature cardlar orasidagi masofa */
+        .feature-item {
+            margin-bottom: 20px;
         }
-
-        .nav-link:hover {
-            color: var(--primary-red) !important;
-        }
-
-        /* Hero Bo'limi */
-        .hero {
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-                        url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1920&auto=format&fit=crop') no-repeat center center/cover;
-            height: 100vh;
+        
+        #auth-area { 
+            margin-top: 15px; 
             display: flex;
-            align-items: center;
-            color: white;
-            padding-top: 80px;
+            flex-direction: column; 
+            width: 100%; 
+            gap: 10px;
         }
-
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 700;
-            line-height: 1.2;
+        
+        .btn-modern { 
+            width: 100%; 
+            padding: 14px;
         }
-
-        .btn-modern {
-            padding: 10px 25px;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: 0.4s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.85rem;
-        }
-
-        .btn-main {
-            background-color: var(--primary-red);
-            color: white;
-            border: none;
-            box-shadow: 0 10px 20px rgba(230, 57, 70, 0.3);
-        }
-
-        .btn-main:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 25px rgba(230, 57, 70, 0.4);
-            background-color: #c32f3a;
-            color: white;
-        }
-
-        /* Xizmatlar Bo'limi */
-        .feature-card {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            transition: 0.3s;
-            height: 100%;
-            border-bottom: 4px solid transparent;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            border-bottom: 4px solid var(--primary-red);
-        }
-
-        .icon-box {
-            width: 70px;
-            height: 70px;
-            background: #fff5f5;
-            color: var(--primary-red);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 15px;
-            font-size: 1.8rem;
-            margin-bottom: 25px;
-        }
-
-        /* CTA Bo'limi */
-        .cta-section {
-            background: var(--dark-bg);
-            padding: 100px 0;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Footer */
-        footer {
-            background: #0a0a0a;
-            color: #888;
-            padding: 60px 0 30px;
-        }
-
-        .footer-link {
-            color: #888;
-            text-decoration: none;
-            transition: 0.3s;
-        }
-
-        .footer-link:hover {
-            color: white;
-        }
-
-        #user-profile-box {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 5px 15px;
-            border-radius: 50px;
-        }
-
-        /* Mobile optimization */
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-            #auth-area { margin-top: 15px; flex-direction: column; width: 100%; }
-            .btn-modern { width: 100%; text-align: center; margin-bottom: 10px; }
-        }
-    </style>
+    }
+</style>
 </head>
 <body>
 

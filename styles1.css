@@ -261,16 +261,62 @@ body {
     color: black !important;
 }
 
-/* --- Responsive --- */
+/* --- Responsive Mukammallashtirish --- */
 @media (max-width: 768px) {
-    .about-hero h1 { font-size: 2.2rem; }
-    .about-hero { height: 320px; }
+    /* 1. Navbarni markazlashtirish va elementlarni pastga tushirish */
+    .navbar {
+        flex-direction: column;
+        gap: 15px;
+    }
+
     .nav-menu { 
-        gap: 10px;
+        gap: 15px;
+        flex-wrap: wrap; /* Elementlar sig'masa pastga tushadi */
+        justify-content: center;
     } 
-    .logo-brand { font-size: 1.2rem; }
+
+    /* 2. Sarlavhalarni ekran o'lchamiga moslash (clamp funksiyasi juda qulay) */
+    .about-hero h1 { 
+        font-size: clamp(2rem, 10vw, 3rem); 
+        line-height: 1.2;
+    }
+
+    .about-hero { 
+        height: auto; 
+        padding: 100px 20px; /* Balandlikni rasmga qarab emas, kontentga qarab moslash */
+        background-attachment: scroll; /* Mobilda parallaks batareyani ko'p yeydi, scroll yaxshi */
+    }
+
+    /* 3. Stat-boxlarni telefonda bittadan chiqarish */
+    .stat-box {
+        margin-bottom: 20px;
+        padding: 30px 15px;
+    }
+
+    .stat-box h3 {
+        font-size: 2.5rem;
+    }
+
+    /* 4. Tugmani butun ekran bo'ylab qilish (qulaylik uchun) */
     .signup-btn {
-        padding: 5px 12px !important;
-        font-size: 0.75rem !important;
+        width: 100%;
+        margin-left: 0;
+        text-align: center;
+    }
+
+    /* 5. Section titlelarni kichraytirish */
+    .section-title {
+        font-size: 1.8rem;
+        padding-left: 15px;
+    }
+}
+
+/* Juda kichik ekranlar uchun (iPhone 5/SE kabi) */
+@media (max-width: 480px) {
+    .nav-menu {
+        gap: 10px;
+    }
+    .nav-menu a {
+        font-size: 0.8rem;
     }
 }

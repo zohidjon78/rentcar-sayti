@@ -6,23 +6,99 @@
     <title>Foydalanish shartlari - RentCar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { background-color: #f4f7f6; font-family: 'Poppins', sans-serif; }
+   <style>
+    body { 
+        background-color: #f4f7f6; 
+        font-family: 'Poppins', sans-serif; 
+        margin: 0; 
+        padding: 0;
+        /* Mobilda sahifa chetiga yopishib qolmasligi uchun */
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* Asosiy konteyner uchun qo'shimcha padding */
+    .container {
+        padding: 15px;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .rule-card {
+        border: none;
+        border-radius: 15px;
+        transition: 0.3s;
+        background: white;
+        padding: 20px;
+        height: 100%; /* Kartochkalar bo'yi bir xil bo'lishi uchun */
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        margin-bottom: 20px; /* Mobilda kartalar orasidagi masofa */
+    }
+
+    .rule-card:hover { 
+        transform: translateY(-5px); 
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1); 
+    }
+
+    .icon-circle {
+        width: 60px; 
+        height: 60px;
+        background: #ffebee; 
+        color: #e63946;
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        border-radius: 50%; 
+        font-size: 1.5rem; 
+        margin-bottom: 15px;
+    }
+
+    /* STICKY NAV MOSLASHUVCHANLIGI */
+    .sticky-nav { 
+        position: sticky; 
+        top: 20px; /* Top masofasi biroz kamaytirildi */
+        z-index: 100;
+    }
+
+    /* MEDIA QUERIES - MOSLASHUVCHANLIK */
+    
+    /* Telefonlar uchun (576px gacha) */
+    @media (max-width: 576px) {
+        .sticky-nav {
+            position: relative; /* Mobilda tepada qotib turmasligi uchun */
+            top: 0;
+            margin-bottom: 20px;
+        }
+        
         .rule-card {
-            border: none;
-            border-radius: 15px;
-            transition: 0.3s;
-            background: white;
+            padding: 15px;
         }
-        .rule-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+
         .icon-circle {
-            width: 60px; height: 60px;
-            background: #ffebee; color: #e63946;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 50%; font-size: 1.5rem; margin-bottom: 15px;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
         }
-        .sticky-nav { position: sticky; top: 100px; }
-    </style>
+
+        h1 {
+            font-size: 1.5rem; /* Sarlavhani kichraytirish */
+            text-align: center;
+        }
+    }
+
+    /* Planshetlar uchun (992px gacha) */
+    @media (max-width: 992px) {
+        .sticky-nav {
+            position: relative;
+            top: 0;
+            display: flex; /* Menyuni yonma-yon qilish uchun (agar kerak bo'lsa) */
+            overflow-x: auto; /* Agar menyu sig'masa gorizontal skroll */
+            white-space: nowrap;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+    }
+</style>
 </head>
 <body>
 

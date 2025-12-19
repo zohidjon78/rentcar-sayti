@@ -9,138 +9,161 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        :root {
-            --primary-red: #e63946;
-            --glass-bg: rgba(255, 255, 255, 0.1);
-        }
+    :root {
+        --primary-red: #e63946;
+        --glass-bg: rgba(255, 255, 255, 0.1);
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
 
-        body {
-            /* YANGI ORQA FON: Tungi premium avtomobil */
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-                        url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1920&auto=format&fit=crop') no-repeat center center/cover;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            color: white;
-        }
+    body {
+        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                    url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1920&auto=format&fit=crop') no-repeat center center/cover;
+        min-height: 100vh; /* height: 100vh dan min-height ga o'zgartirildi */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px; /* Chetlarida masofa qolishi uchun */
+        color: white;
+    }
 
-        .registration-container {
-            width: 100%;
-            max-width: 450px;
-            padding: 20px;
-        }
+    .registration-container {
+        width: 100%;
+        max-width: 450px;
+        /* padding olib tashlandi, chunki bodyda bor */
+    }
 
+    .form-card {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px); /* Safari uchun */
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 25px;
+        padding: 40px;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+        animation: fadeIn 0.8s ease-out;
+        width: 100%;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    .logo-area {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .logo-area h1 {
+        font-size: clamp(2rem, 8vw, 2.8rem); /* Ekran o'lchamiga qarab shrift o'zgaradi */
+        font-weight: 800;
+        color: var(--primary-red);
+        text-shadow: 0 5px 15px rgba(230, 57, 70, 0.4);
+    }
+
+    h2 { text-align: center; margin-bottom: 5px; font-weight: 600; font-size: clamp(1.2rem, 5vw, 1.5rem); }
+    .subtitle { text-align: center; font-size: 0.85rem; opacity: 0.7; margin-bottom: 25px; }
+
+    .input-group {
+        margin-bottom: 18px;
+        position: relative;
+    }
+
+    .input-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .input-group input {
+        width: 100%;
+        padding: 12px 15px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.05);
+        color: white;
+        font-size: 16px; /* iPhone-da zoom bo'lib ketmasligi uchun 16px ideal */
+        outline: none;
+        transition: 0.3s;
+    }
+
+    .input-group input:focus {
+        border-color: var(--primary-red);
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 15px;
+        top: 38px;
+        cursor: pointer;
+        opacity: 0.6;
+        transition: 0.3s;
+    }
+    .toggle-password:hover { opacity: 1; color: var(--primary-red); }
+
+    .terms-check {
+        display: flex;
+        align-items: flex-start; /* Kichik ekranlarda matn pastga tushsa tekis turadi */
+        gap: 10px;
+        font-size: 0.8rem;
+        margin: 20px 0;
+    }
+
+    .terms-check input { margin-top: 3px; }
+    .terms-check a { color: var(--primary-red); text-decoration: none; font-weight: 600; }
+
+    .register-button {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 12px;
+        background: var(--primary-red);
+        color: white;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: 0.4s;
+        text-transform: uppercase;
+    }
+
+    .register-button:hover {
+        background: #ff4d5a;
+        box-shadow: 0 10px 20px rgba(230, 57, 70, 0.4);
+        transform: translateY(-2px);
+    }
+
+    .footer-link { text-align: center; margin-top: 20px; font-size: 0.85rem; }
+    .footer-link a { color: var(--primary-red); text-decoration: none; font-weight: 600; }
+
+    /* MOBILE VA TABLET UCHUN MOSLASHUVCHANLIK (MEDIA QUERIES) */
+    @media (max-width: 480px) {
         .form-card {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 25px;
-            padding: 40px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
-            animation: fadeIn 0.8s ease-out;
+            padding: 25px 20px; /* Kichik telefonlarda ichki masofani kamaytiramiz */
+            border-radius: 20px;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
+        
         .logo-area {
-            text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
         }
+    }
 
-        .logo-area h1 {
-            font-size: 2.8rem;
-            font-weight: 800;
-            color: var(--primary-red);
-            text-shadow: 0 5px 15px rgba(230, 57, 70, 0.4);
+    /* Ekran gorizontal holatga o'tsa (landscape mode) */
+    @media (max-height: 600px) {
+        body {
+            align-items: flex-start;
+            padding-top: 30px;
+            padding-bottom: 30px;
         }
-
-        h2 { text-align: center; margin-bottom: 5px; font-weight: 600; }
-        .subtitle { text-align: center; font-size: 0.85rem; opacity: 0.7; margin-bottom: 25px; }
-
-        .input-group {
-            margin-bottom: 18px;
-            position: relative;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 12px 15px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.05);
-            color: white;
-            outline: none;
-            transition: 0.3s;
-        }
-
-        .input-group input:focus {
-            border-color: var(--primary-red);
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        /* PAROL KO'RISH TUGMASI (EYE ICON) */
-        .toggle-password {
-            position: absolute;
-            right: 15px;
-            top: 38px;
-            cursor: pointer;
-            opacity: 0.6;
-            transition: 0.3s;
-        }
-        .toggle-password:hover { opacity: 1; color: var(--primary-red); }
-
-        .terms-check {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.8rem;
-            margin: 20px 0;
-        }
-
-        .terms-check a { color: var(--primary-red); text-decoration: none; font-weight: 600; }
-
-        .register-button {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 12px;
-            background: var(--primary-red);
-            color: white;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.4s;
-            text-transform: uppercase;
-        }
-
-        .register-button:hover {
-            background: #ff4d5a;
-            box-shadow: 0 10px 20px rgba(230, 57, 70, 0.4);
-            transform: translateY(-2px);
-        }
-
-        .footer-link { text-align: center; margin-top: 20px; font-size: 0.85rem; }
-        .footer-link a { color: var(--primary-red); text-decoration: none; font-weight: 600; }
-    </style>
+    }
+</style>
 </head>
 <body>
     

@@ -8,178 +8,210 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root {
-            --primary-color: #004aad;
-            --secondary-color: #003780;
-            --text-dark: #1e293b;
-            --text-gray: #64748b;
-            --bg-color: #f8fafc;
-        }
+    :root {
+        --primary-color: #004aad;
+        --secondary-color: #003780;
+        --text-dark: #1e293b;
+        --text-gray: #64748b;
+        --bg-color: #f8fafc;
+    }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background: var(--bg-color);
-            background-image: radial-gradient(#cbd5e1 0.5px, transparent 0.5px);
-            background-size: 24px 24px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+    body { 
+        font-family: 'Inter', sans-serif; 
+        background: var(--bg-color);
+        background-image: radial-gradient(#cbd5e1 0.5px, transparent 0.5px);
+        background-size: 24px 24px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
 
-        /* --- MODERN NAVBAR --- */
+    /* --- MODERN NAVBAR --- */
+    .navbar {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px); /* Safari uchun */
+        padding: 0 5%;
+        height: 70px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    }
+
+    .logo {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: var(--primary-color);
+        text-decoration: none;
+        letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 35px;
+        align-items: center;
+    }
+
+    .nav-links a {
+        text-decoration: none;
+        color: var(--text-dark);
+        font-weight: 500;
+        font-size: 0.95rem;
+        transition: 0.3s;
+        position: relative;
+    }
+
+    .nav-links a:hover {
+        color: var(--primary-color);
+    }
+
+    .nav-links a.active {
+        color: var(--primary-color);
+        font-weight: 700;
+    }
+
+    .nav-links a.active::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--primary-color);
+        border-radius: 2px;
+    }
+
+    /* --- MAIN CONTENT --- */
+    .main-container {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 100px 20px 40px 20px;
+        width: 100%; /* To'liq kenglik */
+    }
+
+    .login-card { 
+        background: white; 
+        padding: 45px 40px; 
+        border-radius: 24px; 
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.08); 
+        width: 100%; 
+        max-width: 420px; 
+        animation: fadeIn 0.6s ease-out;
+        box-sizing: border-box; /* Padding kenglikka ta'sir qilmasligi uchun */
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 { margin-bottom: 8px; color: var(--text-dark); text-align: center; font-size: clamp(1.4rem, 5vw, 1.75rem); font-weight: 700; }
+    .subtitle { color: var(--text-gray); text-align: center; margin-bottom: 35px; font-size: 0.95rem; }
+
+    .input-group { margin-bottom: 22px; }
+    label { display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-dark); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    .input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .input-wrapper i {
+        position: absolute;
+        left: 16px;
+        color: #94a3b8;
+        font-size: 1.1rem;
+    }
+
+    input { 
+        width: 100%; 
+        padding: 14px 14px 14px 48px; 
+        border: 1.5px solid #e2e8f0; 
+        border-radius: 14px; 
+        font-size: 16px; /* iPhone zoom oldini olish uchun */
+        transition: all 0.3s ease;
+        color: var(--text-dark);
+        box-sizing: border-box;
+    }
+
+    input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(0, 74, 173, 0.08);
+        outline: none;
+    }
+
+    .login-button { 
+        width: 100%; 
+        padding: 16px; 
+        background: var(--primary-color); 
+        color: white; 
+        border: none; 
+        border-radius: 14px; 
+        font-size: 1rem; 
+        font-weight: 700; 
+        cursor: pointer; 
+        transition: 0.3s;
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        -webkit-tap-highlight-color: transparent; /* Mobil uchun */
+    }
+
+    .login-button:hover { 
+        background: var(--secondary-color); 
+        box-shadow: 0 10px 20px rgba(0, 74, 173, 0.2);
+        transform: translateY(-1px);
+    }
+
+    .footer-link { text-align: center; margin-top: 25px; font-size: 0.95rem; color: var(--text-gray); }
+    .footer-link a { color: var(--primary-color); text-decoration: none; font-weight: 700; border-bottom: 1px solid transparent; transition: 0.3s; }
+    .footer-link a:hover { border-bottom-color: var(--primary-color); }
+
+    /* RESPONSIVE MOSLASHUVCHANLIK */
+    @media (max-width: 768px) {
         .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 0 5%;
-            height: 70px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            padding: 0 20px;
         }
-
-        .logo {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: var(--primary-color);
-            text-decoration: none;
-            letter-spacing: -0.5px;
-        }
-
         .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 35px;
-            align-items: center;
+            gap: 15px;
         }
-
         .nav-links a {
-            text-decoration: none;
-            color: var(--text-dark);
-            font-weight: 500;
-            font-size: 0.95rem;
-            transition: 0.3s;
-            position: relative;
+            font-size: 0.85rem;
         }
+    }
 
-        .nav-links a:hover {
-            color: var(--primary-color);
+    @media (max-width: 600px) {
+        .navbar {
+            justify-content: center; /* Mobilda logoni markazga olish */
         }
-
-        .nav-links a.active {
-            color: var(--primary-color);
-            font-weight: 700;
+        .nav-links { 
+            display: none; /* Mobilda menyuni berkitish (burger menyu bo'lmasa) */
         }
-
-        .nav-links a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--primary-color);
-            border-radius: 2px;
-        }
-
-        /* --- MAIN CONTENT --- */
-        .main-container {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 100px 20px 40px 20px;
-        }
-
         .login-card { 
-            background: white; 
-            padding: 45px 40px; 
-            border-radius: 24px; 
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.08); 
-            width: 100%; 
-            max-width: 420px; 
-            animation: fadeIn 0.6s ease-out;
+            padding: 30px 20px; 
+            border-radius: 20px;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .main-container {
+            padding-top: 80px;
         }
-
-        h2 { margin-bottom: 8px; color: var(--text-dark); text-align: center; font-size: 1.75rem; font-weight: 700; }
-        .subtitle { color: var(--text-gray); text-align: center; margin-bottom: 35px; font-size: 0.95rem; }
-
-        .input-group { margin-bottom: 22px; }
-        label { display: block; margin-bottom: 10px; font-weight: 600; color: var(--text-dark); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
-        
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
+        h2 {
+            font-size: 1.5rem;
         }
-
-        .input-wrapper i {
-            position: absolute;
-            left: 16px;
-            color: #94a3b8;
-            font-size: 1.1rem;
-        }
-
-        input { 
-            width: 100%; 
-            padding: 14px 14px 14px 48px; 
-            border: 1.5px solid #e2e8f0; 
-            border-radius: 14px; 
-            font-size: 1rem; 
-            transition: all 0.3s ease;
-            color: var(--text-dark);
-        }
-
-        input:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 4px rgba(0, 74, 173, 0.08);
-            outline: none;
-        }
-
-        .login-button { 
-            width: 100%; 
-            padding: 16px; 
-            background: var(--primary-color); 
-            color: white; 
-            border: none; 
-            border-radius: 14px; 
-            font-size: 1rem; 
-            font-weight: 700; 
-            cursor: pointer; 
-            transition: 0.3s;
-            margin-top: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .login-button:hover { 
-            background: var(--secondary-color); 
-            box-shadow: 0 10px 20px rgba(0, 74, 173, 0.2);
-            transform: translateY(-1px);
-        }
-
-        .footer-link { text-align: center; margin-top: 25px; font-size: 0.95rem; color: var(--text-gray); }
-        .footer-link a { color: var(--primary-color); text-decoration: none; font-weight: 700; border-bottom: 1px solid transparent; transition: 0.3s; }
-        .footer-link a:hover { border-bottom-color: var(--primary-color); }
-
-        @media (max-width: 600px) {
-            .nav-links { display: none; }
-            .login-card { padding: 30px 25px; }
-        }
-    </style>
+    }
+</style>
 </head>
 <body>
 
