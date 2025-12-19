@@ -1,24 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
+/* ======================================== */
+/* 1. YANGI VA TO'G'RILANGAN LOGO USLUBLARI */
+/* ======================================== */
 .header-logo-img {
-    height: 40px; /* Logotipning balandligi */
-    width: auto; /* Kengligini avtomatik qiladi */
-    vertical-align: middle; /* Navigatsiya elementlari bilan bir tekis turishi uchun */
-    /* MASOFANI OSHIRISH: Logotipdan keyin 30px bo'sh joy qoldiramiz */
+    height: 40px; 
+    width: auto; 
+    vertical-align: middle; 
     margin-right: 30px; 
 }
 
-/* 2. Logo konteynerini sozlash */
 .navbar .logo { 
-    /* Bu uslub sizning kodingizda bor, faqat to'g'rilash uchun tozalaymiz */
     font-size: 2rem;
     color: white;
     font-weight: bold;
-    /* Rasmli logotip ishlatilganida faqat rasm paydo bo'lishi uchun */
     display: flex; 
     align-items: center; 
     padding: 0; 
     margin: 0;
 }
+
+/* ======================================== */
+/* 2. ROOT VA RESET */
+/* ======================================== */
 :root {
   --primary-color: #004aad;
   --secondary-color: #00c6ff;
@@ -41,6 +45,7 @@ body {
   background-size: cover;
   min-height: 100vh;
   color: var(--text-dark);
+  overflow-x: hidden;
 }
 
 .container {
@@ -49,7 +54,9 @@ body {
   padding: 0 20px;
 }
 
-/* --- Navigation --- */
+/* ======================================== */
+/* 3. NAVIGATION (STICKY & GLASS) */
+/* ======================================== */
 .main-header {
   background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(10px);
@@ -84,6 +91,7 @@ body {
   display: flex;
   list-style: none;
   gap: 30px;
+  align-items: center; /* Tugmani linklar bilan tekislash */
 }
 
 .nav-links a {
@@ -105,9 +113,40 @@ body {
   transition: 0.3s;
 }
 
-.nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+.nav-links a:hover::after, .nav-links a.active::after { 
+    width: 100%; 
+}
 
-/* --- Contact Section (Glassmorphism) --- */
+/* ======================================== */
+/* 4. RO'YXATDAN O'TISH TUGMASI (NAVBAR ICHIDA) */
+/* ======================================== */
+.signup-btn {
+    background: #ffd700;      /* Sariq fon */
+    color: #000 !important;    /* Qora matn */
+    padding: 0.6rem 1.2rem;    /* Tugma o'lchami */
+    border-radius: 30px;       /* Dumaloq shakl */
+    font-weight: 700 !important;
+    text-decoration: none;
+    display: inline-block;
+    border: 2px solid #ffd700; /* Chegara */
+    transition: all 0.3s ease !important;
+    line-height: 1;
+}
+
+.signup-btn:hover {
+    background: transparent !important; 
+    color: #ffd700 !important;         
+    transform: translateY(-3px);        
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+}
+
+.signup-btn::after {
+    display: none !important; /* Tugma tagida chiziq chiqmasligi uchun */
+}
+
+/* ======================================== */
+/* 5. CONTACT SECTION (GLASSMORPHISM) */
+/* ======================================== */
 .content-wrapper {
   padding: 80px 0;
 }
@@ -126,7 +165,6 @@ body {
   grid-template-columns: 1fr 1.2fr;
 }
 
-/* Chap taraf */
 .contact-info-card {
   background: var(--grad);
   color: white;
@@ -240,12 +278,40 @@ footer {
 
 .footer-logo { color: var(--secondary-color); font-weight: bold; }
 
-/* Responsive */
+/* ======================================== */
+/* 6. RESPONSIVE (BARCHA QURILMALAR) */
+/* ======================================== */
+@media (max-width: 1024px) {
+    .container { width: 95%; }
+    .contact-info-card, .contact-form-wrapper { padding: 40px; }
+    .contact-info-card h2 { font-size: 2rem; }
+}
+
 @media (max-width: 992px) {
-  .contact-grid { grid-template-columns: 1fr; }
-  .contact-info-card { padding: 40px; }
+    .contact-grid { grid-template-columns: 1fr; }
+    .contact-info-card { order: 2; border-radius: 0 0 24px 24px; } 
+    .contact-form-wrapper { order: 1; border-radius: 24px 24px 0 0; } 
+    .content-wrapper { padding: 40px 0; }
 }
 
 @media (max-width: 768px) {
-  .nav-links { display: none; } /* Mobil menyu uchun hamburger kerak bo'ladi */
+    .navbar {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .nav-links {
+        gap: 15px;
+        flex-wrap: wrap; 
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo-text { font-size: 1.2rem; }
+    .nav-links a { font-size: 0.85rem; }
+    .submit-btn { font-size: 1rem; padding: 12px; }
+    .signup-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
 }

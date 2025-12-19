@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-/* 1. Logotip va navigatsiya qismlari - o'zgarishsiz qoldi */
+
+/* 1. Logotip va navigatsiya qismlari */
 .header-logo-img {
     height: 40px; 
     width: auto; 
@@ -22,7 +23,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Poppins', sans-serif; /* Shu yerga Poppins qo'shildi */
+    font-family: 'Poppins', sans-serif;
 }
 
 /* --- BODY FONIGA RASM --- */
@@ -34,6 +35,7 @@ body {
     background-size: cover;
     background-position: center;
     color: #333;
+    overflow-x: hidden;
 }
 
 /* Loader */
@@ -49,7 +51,7 @@ body {
 header {
     background-color: #111;
     padding: 1rem 0;
-    position: sticky; /* Tepada qotib turishi uchun */
+    position: sticky;
     top: 0;
     z-index: 999;
 }
@@ -58,47 +60,50 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .logo {
-    font-size: 1.8rem; /* Aloqa bo'limidagidek hajm */
+    font-size: 1.8rem;
     color: white;
-    font-weight: 700;  /* Qalinroq */
-    letter-spacing: 1px; /* Harflar orasidagi masofa */
-    text-transform: uppercase; /* Hammasini katta harf qilish (ixtiyoriy) */
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
-/* --- NAVIGATSIYA ANIMATSIYASI (Siz so'ragan qism) --- */
+/* --- NAVIGATSIYA --- */
 .nav-links {
     list-style: none;
     display: flex;
     gap: 2rem;
+    align-items: center; /* Elementlarni bir chiziqda ushlash uchun */
 }
 
 .nav-links a {
     color: #fff;
     text-decoration: none;
-    font-size: 0.95rem; /* Biroz kichikroq va zamonaviy */
-    font-weight: 500;   /* O'rtacha qalinlik */
+    font-size: 0.95rem;
+    font-weight: 500;
     position: relative;
     transition: color 0.3s;
 }
 
-/* Pastdagi sariq chiziqchaning boshlang'ich holati */
-.nav-links a::after {
+/* Linklar ostidagi chiziq effekti (Sign Up tugmasidan tashqari barchasi uchun) */
+.nav-links a:not(.signup-btn)::after {
     content: '';
     position: absolute;
-    width: 0; /* Boshida ko'rinmaydi */
+    width: 0;
     height: 2px;
-    background: #ffd700; /* Sariq/Oltin rang */
-    bottom: 0;
+    background: #ffd700;
+    bottom: -5px;
     left: 0;
-    transition: width 0.3s ease; /* Sekin cho'zilish effekti */
+    transition: width 0.3s ease;
 }
 
-/* Hover bo'lganda va aktiv sahifada chiziqcha 100% cho'ziladi */
-.nav-links a:hover::after,
-.nav-links a.active::after {
+.nav-links a:not(.signup-btn):hover::after,
+.nav-links a.active:not(.signup-btn)::after {
     width: 100%;
 }
 
@@ -106,7 +111,24 @@ header {
 .nav-links a.active {
     color: #ffd700;
 }
-/* -------------------------------------------------- */
+
+/* --- YANGI: RO'YXATDAN O'TISH TUGMASI --- */
+.signup-btn {
+    background: #ffd700;      /* Sariq fon */
+    color: #000 !important;    /* Qora matn */
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;       /* Dumaloq shakl */
+    font-weight: 700 !important;
+    transition: all 0.3s ease !important;
+    border: 2px solid #ffd700;
+}
+
+.signup-btn:hover {
+    background: transparent !important; /* Ustiga borganda ichi bo'shaladi */
+    color: #ffd700 !important;         /* Matn sariq bo'ladi */
+    transform: translateY(-3px);        /* Biroz yuqoriga ko'tariladi */
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+}
 
 /* Main */
 .container {
@@ -139,7 +161,7 @@ h2 {
 /* Car Grid */
 .car-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
 }
 
@@ -158,7 +180,7 @@ h2 {
 
 .car-card img {
     width: 100%;
-    height: 180px;
+    height: 200px;
     object-fit: cover;
 }
 
@@ -197,4 +219,69 @@ footer {
     padding: 2rem 0;
     text-align: center;
     margin-top: 3rem;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 1024px) {
+    .nav-links {
+        gap: 1.2rem;
+    }
+    h2 {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 0.5rem 0;
+    }
+    
+    .nav-links {
+        gap: 1rem;
+        flex-wrap: wrap; 
+        justify-content: center;
+    }
+
+    .car-grid {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+    
+    h2 {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo {
+        font-size: 1.4rem;
+    }
+
+    .nav-links a {
+        font-size: 0.85rem;
+    }
+
+    .signup-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    .header-logo-img {
+        height: 30px;
+        margin-right: 10px;
+    }
+
+    .car-card img {
+        height: 160px;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+        margin: 1.5rem 0;
+    }
+
+    #filterSelect {
+        width: 90%;
+    }
 }

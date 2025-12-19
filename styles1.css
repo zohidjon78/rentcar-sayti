@@ -1,184 +1,276 @@
-
-.header-logo-img {
-    height: 40px; /* Logotipning balandligi */
-    width: auto; /* Kengligini avtomatik qiladi */
-    vertical-align: middle; /* Navigatsiya elementlari bilan bir tekis turishi uchun */
-    /* MASOFANI OSHIRISH: Logotipdan keyin 30px bo'sh joy qoldiramiz */
-    margin-right: 30px; 
-}
-
-/* 2. Logo konteynerini sozlash */
-.navbar .logo { 
-    /* Bu uslub sizning kodingizda bor, faqat to'g'rilash uchun tozalaymiz */
-    font-size: 2rem;
-    color: white;
-    font-weight: bold;
-    /* Rasmli logotip ishlatilganida faqat rasm paydo bo'lishi uchun */
-    display: flex; 
-    align-items: center; 
-    padding: 0; 
-    margin: 0;
-}
 :root {
-  --main-dark: #0f172a;
-  --accent-gold: #fbbf24;
-  --primary-blue: #2563eb;
-  --soft-bg: #f8fafc;
+    --primary-color: #E60023; 
+    --accent-yellow: #ffcc00; /* Sariq rang effekti uchun */
+    --dark-nav: #0a0a0a;     
+    --light-bg: #ffffff;
+    --text-dark: #1a1a1a;
+    --text-gray: #555555;
+    --transition: all 0.3s ease;
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
-  background-color: var(--soft-bg);
-  overflow-x: hidden;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--light-bg);
+    color: var(--text-dark);
+    margin: 0;
+    overflow-x: hidden;
 }
 
-/* Header & Nav */
+/* --- 1. Navbar: Biroz kattaroq va Sariq effektli --- */
 .custom-header {
-  background: rgba(15, 23, 42, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 15px 0;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+    background: var(--dark-nav);
+    padding: 12px 0; 
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
-.logo-area { display: flex; align-items: center; gap: 10px; }
-.logo-brand { color: white; font-size: 1.6rem; font-weight: 700; }
-.logo-brand span { color: var(--accent-gold); }
-.nav-logo-img { height: 40px; }
-
-.nav-menu { display: flex; list-style: none; gap: 25px; margin: 0; }
-.nav-menu a { color: #cbd5e1; text-decoration: none; font-weight: 500; transition: 0.3s; }
-.nav-menu a:hover, .nav-menu a.active { color: var(--accent-gold); }
-
-/* Hero Section */
-.about-hero {
-  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-              url('https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=1920');
-  background-size: cover;
-  background-position: center;
-  height: 40vh;
-  display: flex;
-  align-items: center;
-  color: white;
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* Stats & Video */
-.section-title { font-weight: 700; margin-bottom: 20px; position: relative; }
-.section-title::after {
-  content: ''; position: absolute; left: 0; bottom: -5px;
-  width: 50px; height: 3px; background: var(--primary-blue);
-}
-
-.stat-box {
-  background: white;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-  text-align: center;
-  transition: 0.3s;
-}
-.stat-box h3 { color: var(--primary-blue); font-weight: 700; margin: 0; }
-.stat-box span { font-size: 0.9rem; color: #64748b; }
-
-.video-container-wrapper {
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 20px 40px rgba(37, 99, 235, 0.2);
-  border: 4px solid white;
-}
-
-/* Feature Cards */
-.feature-card {
-  background: white;
-  padding: 40px 25px;
-  border-radius: 20px;
-  transition: 0.4s;
-  height: 100%;
-  border-bottom: 4px solid transparent;
-}
-.feature-card:hover {
-  transform: translateY(-10px);
-  border-bottom-color: var(--accent-gold);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-}
-.feature-card i {
-  font-size: 2.5rem;
-  color: var(--primary-blue);
-  margin-bottom: 15px;
-  display: inline-block;
-}
-
-/* Footer */
-.modern-footer {
-  background: var(--main-dark);
-  color: white;
-  padding: 40px 0;
-  margin-top: 80px;
-}
-.footer-socials a {
-  color: white;
-  font-size: 1.5rem;
-  margin: 0 15px;
-  transition: 0.3s;
-}
-.footer-socials a:hover { color: var(--accent-gold); }
-.accent-text { color: var(--accent-gold); font-weight: 600; }
-
-@media (max-width: 768px) {
-  .nav-menu { display: none; }
-  .about-hero { height: 30vh; }
-}
-/* Footer kengaytirilgan stili */
-.modern-footer {
-    background: #0f172a;
-    color: white;
-    padding: 60px 0 30px;
-    border-top: 2px solid rgba(255, 255, 255, 0.05);
-}
-
-.footer-title {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-    color: #94a3b8;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.footer-socials a {
-    color: white;
-    font-size: 1.8rem;
-    margin-right: 20px;
-    transition: all 0.3s ease;
-    display: inline-block;
-}
-
-.footer-socials a:hover {
-    color: #fbbf24; /* Oltin rang */
-    transform: translateY(-5px);
-}
-
-/* Hamkor kanallar tugmalari (Badges) */
-.partner-links .partner-item {
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     text-decoration: none;
 }
 
-.partner-links .badge {
-    padding: 10px 15px;
-    font-weight: 400;
-    transition: 0.3s;
-    background: rgba(255, 255, 255, 0.05) !important;
-    color: #cbd5e1;
+.header-logo-img {
+    height: 38px; 
+    width: auto;
+    object-fit: contain;
 }
 
-.partner-links .badge:hover {
-    background: #2563eb !important; /* Ko'k rang */
+.logo-brand {
+    font-size: 1.4rem; 
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.logo-brand span {
+    color: var(--primary-color);
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 30px; 
+    margin: 0;
+    padding: 0;
+    align-items: center; /* Elementlarni bir chiziqda tekislaydi */
+}
+
+.nav-menu a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem; 
+    text-transform: uppercase;
+    position: relative; 
+    transition: var(--transition);
+    padding-bottom: 5px;
+}
+
+/* Sichqoncha borganda matn sariq bo'lishi */
+.nav-menu a:hover, .nav-menu a.active {
+    color: var(--accent-yellow) !important;
+}
+
+/* Pastdan sariq chiziq chizilishi effekti (Sign Up tugmasidan tashqari) */
+.nav-menu a:not(.signup-btn)::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--accent-yellow);
+    transition: width 0.3s ease;
+}
+
+.nav-menu a:not(.signup-btn):hover::after, 
+.nav-menu a.active:not(.signup-btn)::after {
+    width: 100%;
+}
+
+/* --- 2. RO'YXATDAN O'TISH TUGMASI (YANGI QO'SHILDI) --- */
+.signup-btn {
+    background-color: var(--primary-color); /* Qizil fon */
+    color: white !important;
+    padding: 8px 20px !important;
+    border-radius: 50px;
+    border: 2px solid var(--primary-color);
+    font-weight: 700 !important;
+    margin-left: 10px;
+    text-transform: uppercase;
+    font-size: 0.85rem !important;
+}
+
+.signup-btn:hover {
+    background-color: var(--accent-yellow) !important; /* Hoverda sariq bo'ladi */
+    border-color: var(--accent-yellow) !important;
+    color: black !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 204, 0, 0.4);
+}
+
+/* Tugma tagida chiziq chiqishini o'chirish */
+.signup-btn::after {
+    display: none !important;
+}
+
+/* --- 3. Hero Section: Orqa rasm bilan --- */
+.about-hero {
+    position: relative;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                url('https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=2070&auto=format&fit=crop'); 
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     color: white;
-    border-color: #2563eb !important;
+    text-align: center;
 }
 
-.accent-text {
-    color: #fbbf24;
+.about-hero h1 {
+    font-size: 4rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    text-shadow: 2px 4px 10px rgba(0,0,0,0.3);
+}
+
+.about-hero p {
+    font-size: 1.3rem;
+    opacity: 0.9;
+    font-weight: 300;
+}
+
+/* --- 4. Content Area: Toza va Yorqin --- */
+.section-title {
+    font-size: 2.5rem;
     font-weight: 700;
+    margin-bottom: 30px;
+    color: var(--text-dark);
+    border-left: 5px solid var(--primary-color);
+    padding-left: 20px;
+}
+
+.text-muted {
+    font-size: 1.1rem;
+    color: var(--text-gray) !important;
+    line-height: 1.8;
+}
+
+.stat-box {
+    background: #ffffff;
+    padding: 40px 20px;
+    border-radius: 20px;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+    transition: var(--transition);
+}
+
+.stat-box:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+}
+
+.stat-box h3 {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.feature-card {
+    background: #fbfbfb;
+    padding: 50px 30px;
+    border-radius: 25px;
+    text-align: center;
+    height: 100%;
+    border: 1px solid transparent;
+    transition: var(--transition);
+}
+
+.feature-card:hover {
+    background: #ffffff;
+    border-color: #eee;
+    box-shadow: 0 15px 45px rgba(0,0,0,0.07);
+}
+
+.feature-card i {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+/* --- 5. Video --- */
+.video-container-wrapper {
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+    margin-top: 30px;
+}
+
+/* --- 6. Footer --- */
+.modern-footer {
+    background: var(--dark-nav);
+    color: white;
+    padding: 80px 0 40px;
+    margin-top: 100px;
+}
+
+.footer-title {
+    color: #ffffff;
+    font-weight: 600;
+    margin-bottom: 25px;
+    font-size: 1.2rem;
+}
+
+.footer-socials a {
+    color: #fff;
+    font-size: 1.4rem;
+    margin-right: 20px;
+    transition: var(--transition);
+}
+
+.footer-socials a:hover {
+    color: var(--accent-yellow); 
+    transform: scale(1.2);
+}
+
+.badge.rounded-pill {
+    background: rgba(255,255,255,0.05) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    padding: 10px 20px;
+    transition: var(--transition);
+}
+
+.badge.rounded-pill:hover {
+    background: var(--accent-yellow) !important;
+    color: black !important;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .about-hero h1 { font-size: 2.2rem; }
+    .about-hero { height: 320px; }
+    .nav-menu { 
+        gap: 10px;
+    } 
+    .logo-brand { font-size: 1.2rem; }
+    .signup-btn {
+        padding: 5px 12px !important;
+        font-size: 0.75rem !important;
+    }
 }
