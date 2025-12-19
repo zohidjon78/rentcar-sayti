@@ -1,3 +1,4 @@
+require('dotenv').config(); // 1. .env faylini yuklash (Eng tepada bo'lishi shart)
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -10,9 +11,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // --- 2. MONGODB BAZASIGA ULANISH ---
-const dbURI = 'mongodb+srv://rentcarr:zohid571@cluster0.bqauelt.mongodb.net/rentcar_db?retryWrites=true&w=majority';
+// Bu yerda parolingizni qo'shtirnoq ichiga yozasiz
+const dbURI = 'mongodb+srv://rentcarr:zohid2107@cluster0.bqauelt.mongodb.net/rentcar_db?retryWrites=true&w=majority';
 
-// Yangi versiyada qavs ichidagi ortiqcha sozlamalar (useNewUrlParser va h.k) olib tashlandi
 mongoose.connect(dbURI)
     .then(() => console.log("Bulutli baza (MongoDB Atlas) bilan aloqa o'rnatildi! ✅"))
     .catch(err => {
