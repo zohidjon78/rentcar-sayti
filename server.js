@@ -7,7 +7,6 @@ const bcrypt = require('bcryptjs');
 const app = express();
 
 // --- 1. MIDDLEWARE ---
-// CORS: avtorental.uz va vercel manzillari uchun ruxsat
 app.use(cors({
     origin: ['https://avtorental.uz', 'https://www.avtorental.uz', 'https://rentcar-sayti.vercel.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -27,11 +26,13 @@ mongoose.connect(dbURI)
     });
 
 // --- 3. MODELLAR (SCHEMAS) ---
-const User = mongoose.model('User', new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, index: true },
-    password: { type: String, required: true }
-}));
+    password: { type: String, required: true },
+    lastSeen: { type: Date, default: Date.now } // Haqiqiy onlaynni aniqlash uchun
+});
+const User = mongoose.model('User', UserSchema);
 
 const Message = mongoose.model('Message', new mongoose.Schema({
     name: { type: String, required: true },
@@ -65,7 +66,7 @@ app.post('/register', async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const newUser = new User({ name, email, password: hashedPassword });
+        const newUser = new User({ name, email, password: hashedPassword, lastSeen: new Date() });
         await newUser.save();
         res.status(201).json({ message: "Muvaffaqiyatli ro'yxatdan o'tdingiz! ✅" });
     } catch (error) {
@@ -73,7 +74,7 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// LOGIN
+// LOGIN (Har safar login qilganda faollik vaqti yangilanadi)
 app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -87,6 +88,10 @@ app.post('/login', async (req, res) => {
         if(!isMatch) {
             return res.status(401).json({ error: "Email yoki parol noto'g'ri!" });
         }
+
+        // Faollikni yangilash
+        user.lastSeen = new Date();
+        await user.save();
 
         res.status(200).json({ 
             message: "Xush kelibsiz!", 
@@ -124,7 +129,11 @@ app.post('/contact', async (req, res) => {
 // FOYDALANUVCHI MA'LUMOTLARI
 app.get('/api/user/:email', async (req, res) => {
     try {
-        const user = await User.findOne({ email: req.params.email }, { password: 0 });
+        const user = await User.findOneAndUpdate(
+            { email: req.params.email }, 
+            { lastSeen: new Date() }, // Profilga kirganda ham faollik yangilanadi
+            { new: true, projection: { password: 0 } }
+        );
         if (!user) return res.status(404).json({ error: "Foydalanuvchi topilmadi" });
         res.json(user);
     } catch (error) {
@@ -141,32 +150,43 @@ app.get('/api/orders/:userName', async (req, res) => {
     }
 });
 
-// --- 5. STATISTIKA VA RO'YXATLAR (BOG'LANGAN) ---
+// --- 5. STATISTIKA VA RO'YXATLAR (REAL VAQTDA) ---
 
-// Umumiy statistika raqamlari
 app.get('/api/stats', async (req, res) => {
     try {
-        const [totalUsers, totalOrders, totalMessages] = await Promise.all([
+        // Oxirgi 5 daqiqa ichida faol bo'lganlar - "Onlayn" hisoblanadi
+        const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+
+        const [totalUsers, totalOrders, totalMessages, activeNow] = await Promise.all([
             User.countDocuments(),
             Order.countDocuments(),
-            Message.countDocuments()
+            Message.countDocuments(),
+            User.countDocuments({ lastSeen: { $gte: fiveMinutesAgo } }) // Real onlayn
         ]);
-        // Onlayn foydalanuvchilar (random simulyatsiya)
-        const activeNow = Math.floor(Math.random() * (35 - 8 + 1)) + 8;
 
         res.json({
             users: totalUsers,
             orders: totalOrders,
             messages: totalMessages,
             active: activeNow,
-            cars: 125 // Doimiy ko'rsatkich
+            cars: 125 
         });
     } catch (error) {
         res.status(500).json({ error: "Statistikani yuklab bo'lmadi." });
     }
 });
 
-// Jadval uchun barcha foydalanuvchilar
+// Onlayn foydalanuvchilar ro'yxati
+app.get('/api/online-users', async (req, res) => {
+    try {
+        const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+        const users = await User.find({ lastSeen: { $gte: fiveMinutesAgo } }, { name: 1, email: 1 });
+        res.json(users);
+    } catch (err) { 
+        res.status(500).json({ error: "Onlayn mijozlarni olib bo'lmadi" }); 
+    }
+});
+
 app.get('/api/all-users', async (req, res) => {
     try {
         const users = await User.find({}, { name: 1, email: 1 });
@@ -176,7 +196,6 @@ app.get('/api/all-users', async (req, res) => {
     }
 });
 
-// Jadval uchun barcha buyurtmalar
 app.get('/api/all-orders', async (req, res) => {
     try {
         const orders = await Order.find().sort({ date: -1 });
@@ -186,7 +205,6 @@ app.get('/api/all-orders', async (req, res) => {
     }
 });
 
-// Jadval uchun barcha xabarlar
 app.get('/api/all-messages', async (req, res) => {
     try {
         const messages = await Message.find().sort({ date: -1 });

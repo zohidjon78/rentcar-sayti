@@ -177,94 +177,90 @@
     </div>
 
     <script>
-        // Backend manzili
-        const API_URL = 'https://rentcar-backend-dnq1.onrender.com';
+    const API_URL = 'https://rentcar-backend-dnq1.onrender.com';
 
-        async function fetchStats() {
-            try {
-                const response = await fetch(`${API_URL}/api/stats`);
-                const data = await response.json();
-                
-                animate('val-users', data.users || 0);
-                animate('val-orders', data.orders || 0);
-                animate('val-messages', data.messages || 0);
-                animate('val-active', data.active || 0);
-            } catch (err) { 
-                console.error("Statistika xatosi:", err); 
-            }
-        }
-
-        async function showList(type) {
-            const container = document.getElementById('list-container');
-            const head = document.getElementById('table-head');
-            const body = document.getElementById('table-body');
-            const title = document.getElementById('list-title');
-
-            container.style.display = 'block';
-            body.innerHTML = "<tr><td colspan='3'>Yuklanmoqda...</td></tr>";
-
-            try {
-                let endpoint = '';
-                if(type === 'users') {
-                    endpoint = '/api/all-users';
-                    title.innerText = "Barcha Mijozlar";
-                    head.innerHTML = "<th>Ism</th><th>Email</th>";
-                } else if(type === 'orders') {
-                    endpoint = '/api/all-orders';
-                    title.innerText = "Barcha Ijaralar";
-                    head.innerHTML = "<th>Mijoz</th><th>Mashina</th><th>To'lov</th>";
-                } else if(type === 'messages') {
-                    endpoint = '/api/all-messages';
-                    title.innerText = "Kelgan Xabarlar";
-                    head.innerHTML = "<th>Ism</th><th>Email</th><th>Xabar</th>";
-                } else if(type === 'active') {
-                    // Onlayn foydalanuvchilar odatda bazada saqlanmaydi, 
-                    // shuning uchun buni tushuntirish yoki umumiy foydalanuvchilarni ko'rsatish mumkin.
-                    title.innerText = "Hozirda Onlayn Foydalanuvchilar";
-                    head.innerHTML = "<th>Holat</th><th>Ma'lumot</th>";
-                    body.innerHTML = "<tr><td><i class='fa-solid fa-circle' style='color:var(--accent)'></i> Onlayn</td><td>Hozirda serverda faollik kuzatilmoqda.</td></tr>";
-                    return; // Onlayn uchun API endpoint bo'lmasa shu yerda to'xtaydi
-                }
-
-                const res = await fetch(`${API_URL}${endpoint}`);
-                const data = await res.json();
-
-                if (!data || data.length === 0) {
-                    body.innerHTML = "<tr><td colspan='3'>Ma'lumot topilmadi.</td></tr>";
-                    return;
-                }
-
-                body.innerHTML = data.map(item => {
-                    if(type === 'users') return `<tr><td>${item.name || 'Noma\'lum'}</td><td>${item.email}</td></tr>`;
-                    if(type === 'orders') return `<tr><td>${item.userName || 'Mijoz'}</td><td>${item.carName}</td><td>${item.paymentMethod}</td></tr>`;
-                    if(type === 'messages') return `<tr><td>${item.name}</td><td>${item.email}</td><td>${item.message}</td></tr>`;
-                }).join('');
-
-            } catch (err) {
-                body.innerHTML = "<tr><td colspan='3'>Yuklashda xatolik yuz berdi.</td></tr>";
-            }
-        }
-
-        function animate(id, endValue) {
-            const obj = document.getElementById(id);
-            if(!obj) return;
-            let start = 0;
-            const duration = 1000;
-            const stepTime = 30;
-            const increment = endValue / (duration / stepTime);
+    async function fetchStats() {
+        try {
+            const response = await fetch(`${API_URL}/api/stats`);
+            const data = await response.json();
             
-            const timer = setInterval(() => {
-                start += increment;
-                if (start >= endValue) { 
-                    obj.innerText = Math.floor(endValue); 
-                    clearInterval(timer); 
-                } else { 
-                    obj.innerText = Math.floor(start); 
-                }
-            }, stepTime);
+            animate('val-users', data.users || 0);
+            animate('val-orders', data.orders || 0);
+            animate('val-messages', data.messages || 0);
+            animate('val-active', data.active || 0); // Endi bu random emas
+        } catch (err) { 
+            console.error("Statistika xatosi:", err); 
         }
+    }
 
-        document.addEventListener('DOMContentLoaded', fetchStats);
-    </script>
+    async function showList(type) {
+        const container = document.getElementById('list-container');
+        const head = document.getElementById('table-head');
+        const body = document.getElementById('table-body');
+        const title = document.getElementById('list-title');
+
+        container.style.display = 'block';
+        body.innerHTML = "<tr><td colspan='3'>Yuklanmoqda...</td></tr>";
+
+        try {
+            let endpoint = '';
+            if(type === 'users') {
+                endpoint = '/api/all-users';
+                title.innerText = "Barcha Mijozlar";
+                head.innerHTML = "<th>Ism</th><th>Email</th>";
+            } else if(type === 'orders') {
+                endpoint = '/api/all-orders';
+                title.innerText = "Barcha Ijaralar";
+                head.innerHTML = "<th>Mijoz</th><th>Mashina</th><th>To'lov</th>";
+            } else if(type === 'messages') {
+                endpoint = '/api/all-messages';
+                title.innerText = "Kelgan Xabarlar";
+                head.innerHTML = "<th>Ism</th><th>Email</th><th>Xabar</th>";
+            } else if(type === 'active') {
+                endpoint = '/api/online-users'; // Yangi endpoint
+                title.innerText = "Hozirda Faol Mijozlar";
+                head.innerHTML = "<th>Ism</th><th>Email</th>";
+            }
+
+            const res = await fetch(`${API_URL}${endpoint}`);
+            const data = await res.json();
+
+            if (!data || data.length === 0) {
+                body.innerHTML = "<tr><td colspan='3'>Ayni damda faol mijozlar yo'q.</td></tr>";
+                return;
+            }
+
+            body.innerHTML = data.map(item => {
+                if(type === 'users' || type === 'active') return `<tr><td>${item.name || 'Noma\'lum'}</td><td>${item.email}</td></tr>`;
+                if(type === 'orders') return `<tr><td>${item.userName || 'Mijoz'}</td><td>${item.carName}</td><td>${item.paymentMethod}</td></tr>`;
+                if(type === 'messages') return `<tr><td>${item.name}</td><td>${item.email}</td><td>${item.message}</td></tr>`;
+            }).join('');
+
+        } catch (err) {
+            body.innerHTML = "<tr><td colspan='3'>Yuklashda xatolik yuz berdi.</td></tr>";
+        }
+    }
+
+    function animate(id, endValue) {
+        const obj = document.getElementById(id);
+        if(!obj) return;
+        let start = 0;
+        const duration = 1000;
+        const stepTime = 30;
+        const increment = endValue / (duration / stepTime);
+        
+        const timer = setInterval(() => {
+            start += increment;
+            if (start >= endValue) { 
+                obj.innerText = Math.floor(endValue); 
+                clearInterval(timer); 
+            } else { 
+                obj.innerText = Math.floor(start); 
+            }
+        }, stepTime);
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchStats);
+</script>
 </body>
 </html>
