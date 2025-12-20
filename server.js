@@ -7,9 +7,9 @@ const bcrypt = require('bcryptjs');
 const app = express();
 
 // --- 1. MIDDLEWARE ---
-// CORS: avtorental.uz domeningizga ruxsat berildi
+// CORS: avtorental.uz va vercel manzillari uchun ruxsat
 app.use(cors({
-    origin: ['https://avtorental.uz', 'https://www.avtorental.uz'],
+    origin: ['https://avtorental.uz', 'https://www.avtorental.uz', 'https://rentcar-sayti.vercel.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 })); 
@@ -141,8 +141,9 @@ app.get('/api/orders/:userName', async (req, res) => {
     }
 });
 
-// --- 5. STATISTIKA VA RO'YXATLAR ---
+// --- 5. STATISTIKA VA RO'YXATLAR (BOG'LANGAN) ---
 
+// Umumiy statistika raqamlari
 app.get('/api/stats', async (req, res) => {
     try {
         const [totalUsers, totalOrders, totalMessages] = await Promise.all([
@@ -150,6 +151,7 @@ app.get('/api/stats', async (req, res) => {
             Order.countDocuments(),
             Message.countDocuments()
         ]);
+        // Onlayn foydalanuvchilar (random simulyatsiya)
         const activeNow = Math.floor(Math.random() * (35 - 8 + 1)) + 8;
 
         res.json({
@@ -157,32 +159,41 @@ app.get('/api/stats', async (req, res) => {
             orders: totalOrders,
             messages: totalMessages,
             active: activeNow,
-            cars: 125
+            cars: 125 // Doimiy ko'rsatkich
         });
     } catch (error) {
         res.status(500).json({ error: "Statistikani yuklab bo'lmadi." });
     }
 });
 
+// Jadval uchun barcha foydalanuvchilar
 app.get('/api/all-users', async (req, res) => {
     try {
         const users = await User.find({}, { name: 1, email: 1 });
         res.json(users);
-    } catch (err) { res.status(500).json({ error: "Mijozlarni olib bo'lmadi" }); }
+    } catch (err) { 
+        res.status(500).json({ error: "Mijozlarni olib bo'lmadi" }); 
+    }
 });
 
+// Jadval uchun barcha buyurtmalar
 app.get('/api/all-orders', async (req, res) => {
     try {
         const orders = await Order.find().sort({ date: -1 });
         res.json(orders);
-    } catch (err) { res.status(500).json({ error: "Buyurtmalarni olib bo'lmadi" }); }
+    } catch (err) { 
+        res.status(500).json({ error: "Buyurtmalarni olib bo'lmadi" }); 
+    }
 });
 
+// Jadval uchun barcha xabarlar
 app.get('/api/all-messages', async (req, res) => {
     try {
         const messages = await Message.find().sort({ date: -1 });
         res.json(messages);
-    } catch (err) { res.status(500).json({ error: "Xabarlarni olib bo'lmadi" }); }
+    } catch (err) { 
+        res.status(500).json({ error: "Xabarlarni olib bo'lmadi" }); 
+    }
 });
 
 // --- 6. SERVERNI YOQISH ---

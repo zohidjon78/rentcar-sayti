@@ -177,26 +177,23 @@
     </div>
 
     <script>
-        // 🛠️ JONLI BACKEND MANZILI (Render linki qo'yildi)
+        // Backend manzili
         const API_URL = 'https://rentcar-backend-dnq1.onrender.com';
 
-        // 1. STATISTIKA RAQAMLARINI YANGILASH
         async function fetchStats() {
             try {
                 const response = await fetch(`${API_URL}/api/stats`);
-                if (!response.ok) throw new Error("Serverdan ma'lumot olib bo'lmadi");
                 const data = await response.json();
                 
-                animate('val-users', data.users);
-                animate('val-orders', data.orders);
-                animate('val-messages', data.messages);
-                animate('val-active', data.active);
+                animate('val-users', data.users || 0);
+                animate('val-orders', data.orders || 0);
+                animate('val-messages', data.messages || 0);
+                animate('val-active', data.active || 0);
             } catch (err) { 
                 console.error("Statistika xatosi:", err); 
             }
         }
 
-        // 2. TUGMA BOSILGANDA RO'YXATNI KO'RSATISH
         async function showList(type) {
             const container = document.getElementById('list-container');
             const head = document.getElementById('table-head');
@@ -231,14 +228,13 @@
                 }
 
                 body.innerHTML = data.map(item => {
-                    if(type === 'users') return `<tr><td>${item.name}</td><td>${item.email}</td></tr>`;
-                    if(type === 'orders') return `<tr><td>${item.userName}</td><td>${item.carName}</td><td>${item.paymentMethod}</td></tr>`;
+                    if(type === 'users') return `<tr><td>${item.name || 'Noma\'lum'}</td><td>${item.email}</td></tr>`;
+                    if(type === 'orders') return `<tr><td>${item.userName || 'Mijoz'}</td><td>${item.carName}</td><td>${item.paymentMethod}</td></tr>`;
                     if(type === 'messages') return `<tr><td>${item.name}</td><td>${item.email}</td><td>${item.message}</td></tr>`;
                 }).join('');
 
             } catch (err) {
-                console.error("Ro'yxat xatosi:", err);
-                body.innerHTML = "<tr><td colspan='3'>Ma'lumotlarni yuklab bo'lmadi. Serverni tekshiring.</td></tr>";
+                body.innerHTML = "<tr><td colspan='3'>Yuklashda xatolik yuz berdi.</td></tr>";
             }
         }
 
@@ -247,9 +243,8 @@
             let start = 0;
             const duration = 1000;
             const stepTime = 30;
-            if (endValue === undefined || endValue === null) return;
-            
             const increment = endValue / (duration / stepTime);
+            
             const timer = setInterval(() => {
                 start += increment;
                 if (start >= endValue) { 
