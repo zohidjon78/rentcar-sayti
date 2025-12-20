@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RentCar | Jonli Statistika</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #a855f7;
+            --accent: #22c55e;
+            --dark-bg: #030712;
+            --card-bg: rgba(31, 41, 55, 0.5);
+            --text-gray: #9ca3af;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        .top-nav {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            justify-content: flex-start;
+            padding: 20px 5%;
+            z-index: 10;
+        }
+
+        .back-home-btn {
+            text-decoration: none;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .back-home-btn:hover {
+            background: var(--primary);
+            transform: translateX(-5px);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--dark-bg);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            padding: 10px 0 40px 0;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            width: 400px; height: 400px;
+            background: var(--primary);
+            filter: blur(180px);
+            border-radius: 50%;
+            top: 20%; left: -100px;
+            z-index: -1; opacity: 0.4;
+        }
+
+        .container { width: 90%; max-width: 1100px; text-align: center; }
+
+        .header h1 {
+            font-size: 3rem; font-weight: 800;
+            background: linear-gradient(to right, #ffffff, #6366f1);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white; border: none; padding: 12px 25px; border-radius: 12px;
+            font-weight: 700; cursor: pointer; margin-bottom: 40px;
+            transition: 0.3s; display: inline-flex; align-items: center; gap: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 35px; padding: 45px 25px;
+            backdrop-filter: blur(25px); transition: 0.4s; cursor: pointer;
+        }
+
+        .stat-card:hover { transform: translateY(-10px); border-color: var(--primary); }
+
+        .number { font-size: 3.5rem; font-weight: 800; display: block; margin-bottom: 10px; }
+        .label { color: var(--text-gray); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; }
+
+        .data-section {
+            margin-top: 40px; width: 100%; background: var(--card-bg);
+            border-radius: 25px; padding: 30px; display: none;
+            animation: slideUp 0.5s ease; border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .table-wrapper { overflow-x: auto; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; min-width: 500px; }
+        th { text-align: left; padding: 15px; color: var(--primary); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: left; font-size: 0.9rem; }
+        
+        .close-btn { cursor: pointer; float: right; color: var(--text-gray); font-size: 1.5rem; }
+    </style>
+</head>
+<body>
+
+    <div class="top-nav">
+        <a href="index.html" class="back-home-btn">
+            <i class="fa-solid fa-arrow-left"></i> Bosh sahifaga qaytish
+        </a>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>Platforma Statistikasi</h1>
+            <p style="color: var(--text-gray); margin-bottom: 20px;">Ma'lumotlar jonli hisoblanmoqda</p>
+            <button class="refresh-btn" onclick="fetchStats()"><i class="fa-solid fa-rotate"></i> Yangilash</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card" onclick="showList('users')">
+                <div class="icon-box"><i class="fa-solid fa-users"></i></div>
+                <span class="number" id="val-users">0</span>
+                <span class="label">Mijozlar</span>
+            </div>
+
+            <div class="stat-card" onclick="showList('orders')">
+                <div class="icon-box"><i class="fa-solid fa-key"></i></div>
+                <span class="number" id="val-orders">0</span>
+                <span class="label">Ijaralar</span>
+            </div>
+
+            <div class="stat-card" onclick="showList('messages')">
+                <div class="icon-box"><i class="fa-solid fa-envelope"></i></div>
+                <span class="number" id="val-messages">0</span>
+                <span class="label">Xabarlar</span>
+            </div>
+
+            <div class="stat-card" onclick="fetchStats()">
+                <div class="icon-box" style="color: var(--accent);"><i class="fa-solid fa-wifi"></i></div>
+                <span class="number" id="val-active">0</span>
+                <span class="label">Onlayn</span>
+            </div>
+        </div>
+
+        <div id="list-container" class="data-section">
+            <span class="close-btn" onclick="document.getElementById('list-container').style.display='none'">&times;</span>
+            <h2 id="list-title" style="margin-bottom: 10px;">Ro'yxat</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr id="table-head"></tr></thead>
+                    <tbody id="table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 🛠️ JONLI BACKEND MANZILI (Render linki qo'yildi)
+        const API_URL = 'https://rentcar-backend-dnq1.onrender.com';
+
+        // 1. STATISTIKA RAQAMLARINI YANGILASH
+        async function fetchStats() {
+            try {
+                const response = await fetch(`${API_URL}/api/stats`);
+                if (!response.ok) throw new Error("Serverdan ma'lumot olib bo'lmadi");
+                const data = await response.json();
+                
+                animate('val-users', data.users);
+                animate('val-orders', data.orders);
+                animate('val-messages', data.messages);
+                animate('val-active', data.active);
+            } catch (err) { 
+                console.error("Statistika xatosi:", err); 
+            }
+        }
+
+        // 2. TUGMA BOSILGANDA RO'YXATNI KO'RSATISH
+        async function showList(type) {
+            const container = document.getElementById('list-container');
+            const head = document.getElementById('table-head');
+            const body = document.getElementById('table-body');
+            const title = document.getElementById('list-title');
+
+            container.style.display = 'block';
+            body.innerHTML = "<tr><td colspan='3'>Yuklanmoqda...</td></tr>";
+
+            try {
+                let endpoint = '';
+                if(type === 'users') {
+                    endpoint = '/api/all-users';
+                    title.innerText = "Barcha Mijozlar";
+                    head.innerHTML = "<th>Ism</th><th>Email</th>";
+                } else if(type === 'orders') {
+                    endpoint = '/api/all-orders';
+                    title.innerText = "Barcha Ijaralar";
+                    head.innerHTML = "<th>Mijoz</th><th>Mashina</th><th>To'lov</th>";
+                } else if(type === 'messages') {
+                    endpoint = '/api/all-messages';
+                    title.innerText = "Kelgan Xabarlar";
+                    head.innerHTML = "<th>Ism</th><th>Email</th><th>Xabar</th>";
+                }
+
+                const res = await fetch(`${API_URL}${endpoint}`);
+                const data = await res.json();
+
+                if (!data || data.length === 0) {
+                    body.innerHTML = "<tr><td colspan='3'>Ma'lumot topilmadi.</td></tr>";
+                    return;
+                }
+
+                body.innerHTML = data.map(item => {
+                    if(type === 'users') return `<tr><td>${item.name}</td><td>${item.email}</td></tr>`;
+                    if(type === 'orders') return `<tr><td>${item.userName}</td><td>${item.carName}</td><td>${item.paymentMethod}</td></tr>`;
+                    if(type === 'messages') return `<tr><td>${item.name}</td><td>${item.email}</td><td>${item.message}</td></tr>`;
+                }).join('');
+
+            } catch (err) {
+                console.error("Ro'yxat xatosi:", err);
+                body.innerHTML = "<tr><td colspan='3'>Ma'lumotlarni yuklab bo'lmadi. Serverni tekshiring.</td></tr>";
+            }
+        }
+
+        function animate(id, endValue) {
+            const obj = document.getElementById(id);
+            let start = 0;
+            const duration = 1000;
+            const stepTime = 30;
+            if (endValue === undefined || endValue === null) return;
+            
+            const increment = endValue / (duration / stepTime);
+            const timer = setInterval(() => {
+                start += increment;
+                if (start >= endValue) { 
+                    obj.innerText = Math.floor(endValue); 
+                    clearInterval(timer); 
+                } else { 
+                    obj.innerText = Math.floor(start); 
+                }
+            }, stepTime);
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchStats);
+    </script>
+</body>
+</html>

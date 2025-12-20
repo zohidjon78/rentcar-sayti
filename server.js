@@ -1,18 +1,23 @@
-require('dotenv').config(); // 1. .env faylini yuklash (Eng tepada bo'lishi shart)
+require('dotenv').config(); 
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const bcrypt = require('bcryptjs');
 
 const app = express();
 
 // --- 1. MIDDLEWARE ---
-app.use(cors()); 
+// CORS: avtorental.uz domeningizga ruxsat berildi
+app.use(cors({
+    origin: ['https://avtorental.uz', 'https://www.avtorental.uz'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+})); 
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
 // --- 2. MONGODB BAZASIGA ULANISH ---
-// Bu yerda parolingizni qo'shtirnoq ichiga yozasiz
-const dbURI = 'mongodb+srv://rentcarr:zohid2107@cluster0.bqauelt.mongodb.net/rentcar_db?retryWrites=true&w=majority';
+const dbURI = process.env.MONGODB_URI || 'mongodb+srv://rentcarr:zohid2107@cluster0.bqauelt.mongodb.net/rentcar_db?retryWrites=true&w=majority';
 
 mongoose.connect(dbURI)
     .then(() => console.log("Bulutli baza (MongoDB Atlas) bilan aloqa o'rnatildi! ✅"))
@@ -21,7 +26,7 @@ mongoose.connect(dbURI)
         console.error(err.message);
     });
 
-// --- 3. MODELLAR ---
+// --- 3. MODELLAR (SCHEMAS) ---
 const User = mongoose.model('User', new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, index: true },
@@ -42,13 +47,13 @@ const Order = mongoose.model('Order', new mongoose.Schema({
     date: { type: Date, default: Date.now }
 }));
 
-// --- 4. YO'LLAR (ROUTES) ---
+// --- 4. ASOSIY YO'LLAR (ROUTES) ---
 
 app.get('/', (req, res) => {
-    console.log("Asosiy sahifaga so'rov keldi 🌐");
     res.send("Server muvaffaqiyatli ishlayapti! 🚀");
 });
 
+// RO'YXATDAN O'TISH
 app.post('/register', async (req, res) => {
     try {
         const { name, email, password } = req.body;
@@ -56,7 +61,11 @@ app.post('/register', async (req, res) => {
         if (existingUser) {
             return res.status(400).json({ error: "Bu email bilan ro'yxatdan o'tilgan!" });
         }
-        const newUser = new User({ name, email, password });
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const newUser = new User({ name, email, password: hashedPassword });
         await newUser.save();
         res.status(201).json({ message: "Muvaffaqiyatli ro'yxatdan o'tdingiz! ✅" });
     } catch (error) {
@@ -64,17 +73,21 @@ app.post('/register', async (req, res) => {
     }
 });
 
+// LOGIN
 app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
-        console.log(`Login so'rovi: ${email} 🔑`);
         const user = await User.findOne({ email });
         
-        if (!user || user.password !== password) {
+        if (!user) {
             return res.status(401).json({ error: "Email yoki parol noto'g'ri!" });
         }
         
-        console.log(`Foydalanuvchi tizimga kirdi: ${user.name} ✅`);
+        const isMatch = await bcrypt.compare(password, user.password);
+        if(!isMatch) {
+            return res.status(401).json({ error: "Email yoki parol noto'g'ri!" });
+        }
+
         res.status(200).json({ 
             message: "Xush kelibsiz!", 
             userName: user.name, 
@@ -85,6 +98,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
+// BUYURTMALAR VA XABARLAR (POST)
 app.post('/api/orders', async (req, res) => {
     try {
         const { userName, carName, paymentMethod } = req.body;
@@ -107,6 +121,7 @@ app.post('/contact', async (req, res) => {
     }
 });
 
+// FOYDALANUVCHI MA'LUMOTLARI
 app.get('/api/user/:email', async (req, res) => {
     try {
         const user = await User.findOne({ email: req.params.email }, { password: 0 });
@@ -126,7 +141,51 @@ app.get('/api/orders/:userName', async (req, res) => {
     }
 });
 
-// --- 5. SERVERNI YOQISH ---
+// --- 5. STATISTIKA VA RO'YXATLAR ---
+
+app.get('/api/stats', async (req, res) => {
+    try {
+        const [totalUsers, totalOrders, totalMessages] = await Promise.all([
+            User.countDocuments(),
+            Order.countDocuments(),
+            Message.countDocuments()
+        ]);
+        const activeNow = Math.floor(Math.random() * (35 - 8 + 1)) + 8;
+
+        res.json({
+            users: totalUsers,
+            orders: totalOrders,
+            messages: totalMessages,
+            active: activeNow,
+            cars: 125
+        });
+    } catch (error) {
+        res.status(500).json({ error: "Statistikani yuklab bo'lmadi." });
+    }
+});
+
+app.get('/api/all-users', async (req, res) => {
+    try {
+        const users = await User.find({}, { name: 1, email: 1 });
+        res.json(users);
+    } catch (err) { res.status(500).json({ error: "Mijozlarni olib bo'lmadi" }); }
+});
+
+app.get('/api/all-orders', async (req, res) => {
+    try {
+        const orders = await Order.find().sort({ date: -1 });
+        res.json(orders);
+    } catch (err) { res.status(500).json({ error: "Buyurtmalarni olib bo'lmadi" }); }
+});
+
+app.get('/api/all-messages', async (req, res) => {
+    try {
+        const messages = await Message.find().sort({ date: -1 });
+        res.json(messages);
+    } catch (err) { res.status(500).json({ error: "Xabarlarni olib bo'lmadi" }); }
+});
+
+// --- 6. SERVERNI YOQISH ---
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
     console.log(`Server ishlamoqda: Port ${PORT} 🚀`);

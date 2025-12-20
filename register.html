@@ -24,24 +24,23 @@
     body {
         background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
                     url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1920&auto=format&fit=crop') no-repeat center center/cover;
-        min-height: 100vh; /* height: 100vh dan min-height ga o'zgartirildi */
+        min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 20px; /* Chetlarida masofa qolishi uchun */
+        padding: 20px;
         color: white;
     }
 
     .registration-container {
         width: 100%;
         max-width: 450px;
-        /* padding olib tashlandi, chunki bodyda bor */
     }
 
     .form-card {
         background: rgba(255, 255, 255, 0.08);
         backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px); /* Safari uchun */
+        -webkit-backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.15);
         border-radius: 25px;
         padding: 40px;
@@ -61,7 +60,7 @@
     }
 
     .logo-area h1 {
-        font-size: clamp(2rem, 8vw, 2.8rem); /* Ekran o'lchamiga qarab shrift o'zgaradi */
+        font-size: clamp(2rem, 8vw, 2.8rem);
         font-weight: 800;
         color: var(--primary-red);
         text-shadow: 0 5px 15px rgba(230, 57, 70, 0.4);
@@ -89,7 +88,7 @@
         border: 1px solid rgba(255, 255, 255, 0.2);
         background: rgba(255, 255, 255, 0.05);
         color: white;
-        font-size: 16px; /* iPhone-da zoom bo'lib ketmasligi uchun 16px ideal */
+        font-size: 16px;
         outline: none;
         transition: 0.3s;
     }
@@ -111,7 +110,7 @@
 
     .terms-check {
         display: flex;
-        align-items: flex-start; /* Kichik ekranlarda matn pastga tushsa tekis turadi */
+        align-items: flex-start;
         gap: 10px;
         font-size: 0.8rem;
         margin: 20px 0;
@@ -132,6 +131,10 @@
         cursor: pointer;
         transition: 0.4s;
         text-transform: uppercase;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
     }
 
     .register-button:hover {
@@ -140,22 +143,22 @@
         transform: translateY(-2px);
     }
 
+    .register-button:disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
+    }
+
     .footer-link { text-align: center; margin-top: 20px; font-size: 0.85rem; }
     .footer-link a { color: var(--primary-red); text-decoration: none; font-weight: 600; }
 
-    /* MOBILE VA TABLET UCHUN MOSLASHUVCHANLIK (MEDIA QUERIES) */
     @media (max-width: 480px) {
         .form-card {
-            padding: 25px 20px; /* Kichik telefonlarda ichki masofani kamaytiramiz */
+            padding: 25px 20px;
             border-radius: 20px;
         }
-        
-        .logo-area {
-            margin-bottom: 15px;
-        }
+        .logo-area { margin-bottom: 15px; }
     }
 
-    /* Ekran gorizontal holatga o'tsa (landscape mode) */
     @media (max-height: 600px) {
         body {
             align-items: flex-start;
@@ -189,7 +192,7 @@
 
                 <div class="input-group">
                     <label for="password">Parol</label>
-                    <input type="password" id="password" name="password" placeholder="Kamida 8 belgi" required>
+                    <input type="password" id="password" name="password" placeholder="Kamida 8 belgi" required minlength="8">
                     <i class="fas fa-eye toggle-password" id="eyeIcon"></i>
                 </div>
 
@@ -198,7 +201,7 @@
                     <label for="terms">Men <a href="shartlar.html">Ijara shartlari</a> bilan roziman</label>
                 </div>
 
-                <button type="submit" class="register-button">Ro'yxatdan o'tish</button>
+                <button type="submit" class="register-button" id="regBtn">Ro'yxatdan o'tish</button>
             </form>
 
             <div class="footer-link">
@@ -216,7 +219,6 @@
         const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
         passwordInput.setAttribute('type', type);
         
-        // Ikonkani almashtirish
         this.classList.toggle('fa-eye');
         this.classList.toggle('fa-eye-slash');
     });
@@ -225,9 +227,14 @@
     document.getElementById('registrationForm').addEventListener('submit', async function(event) {
         event.preventDefault(); 
         
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
+        const regBtn = document.getElementById('regBtn');
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
+
+        // Yuklanish holati
+        regBtn.disabled = true;
+        regBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Yuborilmoqda...';
 
         try {
             const response = await fetch('https://rentcar-backend-dnq1.onrender.com/register', {
@@ -240,14 +247,17 @@
 
             if (response.ok) {
                 alert("Muvaffaqiyatli ro'yxatdan o'tdingiz! Endi tizimga kiring.");
-                localStorage.clear();
                 window.location.href = "login.html"; 
             } else {
-                alert(data.error);
+                alert(data.error || "Ro'yxatdan o'tishda xatolik!");
+                regBtn.disabled = false;
+                regBtn.innerHTML = "Ro'yxatdan o'tish";
             }
         } catch (error) {
             console.error("Xatolik:", error);
-            alert("Server aloqaga chiqmayapti!");
+            alert("Server bilan aloqa uzildi. Render serveri uyg'onishi uchun 30 soniya kerak bo'lishi mumkin. Qayta urinib ko'ring.");
+            regBtn.disabled = false;
+            regBtn.innerHTML = "Ro'yxatdan o'tish";
         }
     });
 </script>

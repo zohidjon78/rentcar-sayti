@@ -23,13 +23,13 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 15px; /* Mobilda chetki masofa kamaytirildi */
+        padding: 15px; 
     }
 
     .profile-container {
         background: var(--glass);
         backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px); /* Safari uchun */
+        -webkit-backdrop-filter: blur(10px);
         width: 100%;
         max-width: 500px;
         border-radius: 30px;
@@ -39,12 +39,11 @@
         position: relative; 
     }
 
-    /* ORQAGA QAYTISH TUGMASI - MOBILDA QULAYROQ */
     .back-btn {
         position: absolute;
         top: 20px;
         left: 20px;
-        width: 45px; /* Biroz kattalashtirildi */
+        width: 45px;
         height: 45px;
         background: rgba(255, 255, 255, 0.2);
         border-radius: 50%;
@@ -60,7 +59,6 @@
 
     .back-btn:hover { background: rgba(255, 255, 255, 0.4); transform: scale(1.1); }
 
-    /* MODAL MOSLASHUVCHANLIGI */
     .modal {
         display: none;
         position: fixed;
@@ -68,16 +66,16 @@
         left: 0; top: 0; width: 100%; height: 100%;
         background: rgba(0,0,0,0.6);
         backdrop-filter: blur(8px);
-        padding: 10px; /* Mobilda chetki bo'shliq */
+        padding: 10px;
         box-sizing: border-box;
     }
 
     .modal-content {
         background: white;
-        margin: 15% auto; /* Mobilda balandroq turadi */
+        margin: 15% auto;
         padding: 25px;
         border-radius: 25px;
-        width: 100%; /* To'liq kenglik */
+        width: 100%;
         max-width: 400px;
         box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         animation: modalOpen 0.4s ease;
@@ -102,14 +100,14 @@
     .profile-header {
         background: var(--primary);
         color: white;
-        padding: 50px 20px 40px; /* Back btn bilan to'qnashmasligi uchun */
+        padding: 50px 20px 40px;
         text-align: center;
         position: relative;
     }
 
     .avatar-wrapper {
         position: relative;
-        width: clamp(100px, 25vw, 120px); /* Ekran o'lchamiga qarab o'zgaradi */
+        width: clamp(100px, 25vw, 120px);
         height: clamp(100px, 25vw, 120px);
         margin: 0 auto;
     }
@@ -125,7 +123,6 @@
 
     .profile-body { padding: 25px; }
 
-    /* STATISTIKA - MOBILDA KO'RINISHI */
     .user-stats {
         display: grid; 
         grid-template-columns: 1fr 1fr;
@@ -157,7 +154,7 @@
         font-size: 0.9rem;
     }
 
-    .info-row span:last-child { font-weight: 600; color: var(--dark); }
+    .info-row span:last-child { font-weight: 600; }
 
     .actions { display: flex; flex-direction: column; gap: 10px; margin-top: 30px; }
 
@@ -190,7 +187,6 @@
     }
     .btn-danger { background: #fee2e2; color: #ef4444; }
 
-    /* MEDIA QUERIES */
     @media (max-width: 400px) {
         .profile-body { padding: 15px; }
         .user-stats { gap: 8px; }
@@ -213,7 +209,7 @@
         <div class="avatar-wrapper">
             <div class="avatar"><i class="fas fa-user-tie"></i></div>
         </div>
-        <h2 id="display-name" style="margin: 15px 0 5px;">Foydalanuvchi</h2>
+        <h2 id="display-name" style="margin: 15px 0 5px;">Yuklanmoqda...</h2>
         <span style="opacity: 0.8; font-size: 0.9rem;">Premium Mijoz</span>
     </div>
 
@@ -236,12 +232,11 @@
             <b id="user-email">Yuklanmoqda...</b>
         </div>
 
-       <div class="actions">
-    <a href="index.html" class="btn btn-outline"><i class="fas fa-home"></i> Bosh sahifa</a>
-    
-    <a href="mashinalar.html" class="btn btn-main"><i class="fas fa-search"></i> Mashina band qilish</a>
-    <button onclick="logout()" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Chiqish</button>
-</div>
+        <div class="actions">
+            <a href="index.html" class="btn btn-outline"><i class="fas fa-home"></i> Bosh sahifa</a>
+            <a href="mashinalar.html" class="btn btn-main"><i class="fas fa-search"></i> Mashina band qilish</a>
+            <button onclick="logout()" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Chiqish</button>
+        </div>
     </div>
 </div>
 
@@ -249,7 +244,7 @@
     <div class="modal-content">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h3 style="margin: 0; color: var(--primary);">Mening ijaralarim</h3>
-            <i class="fas fa-times" onclick="closeRentals()" style="cursor: pointer;"></i>
+            <i class="fas fa-times" onclick="closeRentals()" style="cursor: pointer; font-size: 1.2rem;"></i>
         </div>
         <div id="rental-list">
             <p style='text-align:center; color:#999;'>Yuklanmoqda...</p>
@@ -258,43 +253,32 @@
 </div>
 
 <script>
-    // Sahifa yuklanganda hamma ma'lumotlarni serverdan olish
     window.onload = function() {
-        // Ma'lumotlarni xotiradan olish
         const userName = localStorage.getItem('userName');
         const userEmail = localStorage.getItem('userEmail'); 
 
-        // 1. Agar foydalanuvchi tizimga kirmagan bo'lsa, uni haydab yuboramiz
         if (!userName) {
             window.location.href = "login.html";
             return;
         }
 
-        // 2. Ism va Emailni ekranga chiqarish (Xatolikdan himoya bilan)
-        const displayName = document.getElementById('display-name');
-        const displayEmail = document.getElementById('user-email');
-
-        if (displayName) displayName.innerText = userName;
-        if (displayEmail) displayEmail.innerText = userEmail ? userEmail : "Email topilmadi";
+        document.getElementById('display-name').innerText = userName;
+        document.getElementById('user-email').innerText = userEmail ? userEmail : "Email topilmadi";
         
-        // 3. Serverdan buyurtmalarni yuklashni boshlash
         fetchUserOrders(userName);
     };
 
-    // SERVERDAN BUYURTMALARNI OLISH
     async function fetchUserOrders(userName) {
         const listContainer = document.getElementById('rental-list');
         const rentalCount = document.getElementById('rental-count');
 
         try {
-            // Serverga so'rov yuborish
             const response = await fetch(`https://rentcar-backend-dnq1.onrender.com/api/orders/${encodeURIComponent(userName)}`);
             
             if (!response.ok) throw new Error('Ma\'lumot olishda xatolik');
 
             const orders = await response.json();
 
-            // Soni yangilash
             if (rentalCount) rentalCount.innerText = orders.length + " ta";
 
             listContainer.innerHTML = "";
@@ -307,7 +291,6 @@
                     </div>`;
             } else {
                 orders.forEach((order) => {
-                    // Sanani o'zbekcha formatda chiroyli qilish (20-dekabr, 2024)
                     const date = new Date(order.date).toLocaleDateString('uz-UZ', {
                         year: 'numeric',
                         month: 'long',
@@ -332,35 +315,26 @@
             }
         } catch (error) {
             console.error("Xatolik:", error);
-            if (listContainer) {
-                listContainer.innerHTML = `
-                    <p style='color:red; text-align:center;'>
-                        <i class="fas fa-exclamation-triangle"></i> Ma'lumotlarni yuklab bo'lmadi.
-                    </p>`;
-            }
+            listContainer.innerHTML = `<p style='color:red; text-align:center;'><i class="fas fa-exclamation-triangle"></i> Xatolik yuz berdi.</p>`;
         }
     }
 
-    // Modal funksiyalari
     function openRentals() { 
         document.getElementById('rentalModal').style.display = "block"; 
-        // Har safar ochilganda ma'lumotni yangilash
-        const userName = localStorage.getItem('userName');
-        if (userName) fetchUserOrders(userName);
     }
     
-    function closeRentals() { document.getElementById('rentalModal').style.display = "none"; }
+    function closeRentals() { 
+        document.getElementById('rentalModal').style.display = "none"; 
+    }
 
-    // Tashqarini bossa modal yopilishi uchun
     window.onclick = function(event) {
         const modal = document.getElementById('rentalModal');
         if (event.target == modal) closeRentals();
     }
 
-    // Chiqish funksiyasi
     function logout() {
         if(confirm("Chiqmoqchimisiz?")) {
-            localStorage.clear(); // Hamma ma'lumotlarni tozalash (xavfsizroq)
+            localStorage.clear();
             window.location.href = "login.html";
         }
     }
