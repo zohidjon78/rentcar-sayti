@@ -157,7 +157,7 @@
                 <span class="label">Xabarlar</span>
             </div>
 
-            <div class="stat-card" onclick="fetchStats()">
+            <div class="stat-card" onclick="showList('active')">
                 <div class="icon-box" style="color: var(--accent);"><i class="fa-solid fa-wifi"></i></div>
                 <span class="number" id="val-active">0</span>
                 <span class="label">Onlayn</span>
@@ -217,6 +217,13 @@
                     endpoint = '/api/all-messages';
                     title.innerText = "Kelgan Xabarlar";
                     head.innerHTML = "<th>Ism</th><th>Email</th><th>Xabar</th>";
+                } else if(type === 'active') {
+                    // Onlayn foydalanuvchilar odatda bazada saqlanmaydi, 
+                    // shuning uchun buni tushuntirish yoki umumiy foydalanuvchilarni ko'rsatish mumkin.
+                    title.innerText = "Hozirda Onlayn Foydalanuvchilar";
+                    head.innerHTML = "<th>Holat</th><th>Ma'lumot</th>";
+                    body.innerHTML = "<tr><td><i class='fa-solid fa-circle' style='color:var(--accent)'></i> Onlayn</td><td>Hozirda serverda faollik kuzatilmoqda.</td></tr>";
+                    return; // Onlayn uchun API endpoint bo'lmasa shu yerda to'xtaydi
                 }
 
                 const res = await fetch(`${API_URL}${endpoint}`);
@@ -240,6 +247,7 @@
 
         function animate(id, endValue) {
             const obj = document.getElementById(id);
+            if(!obj) return;
             let start = 0;
             const duration = 1000;
             const stepTime = 30;
