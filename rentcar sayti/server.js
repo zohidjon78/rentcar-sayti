@@ -15,22 +15,12 @@ app.use(cors({
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
-// --- 2. MONGODB BAZASIGA ULANISH ---
-const dbURI = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb+srv://idasturiy_db_user:zohidjon_6666@cluster0.sfpoqxq.mongodb.net/rentcar_db?retryWrites=true&w=majority';
-// Mongoose ulanish parametrlari (family: 4 Render IPv6 muammosini hal qiladi)
-mongoose.connect(dbURI)
-    .then(() => console.log("Bulutli baza (MongoDB Atlas) bilan aloqa o'rnatildi! ✅"))
-    .catch(err => {
-        console.error("❌ BAZADA XATO:");
-        console.error(err.message);
-    });
-
-// --- 3. MODELLAR (SCHEMAS) ---
+// --- 2. MODELLAR (SCHEMAS) ---
 const UserSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, index: true },
     password: { type: String, required: true },
-    lastSeen: { type: Date, default: Date.now } // Haqiqiy onlaynni aniqlash uchun
+    lastSeen: { type: Date, default: Date.now }
 });
 const User = mongoose.model('User', UserSchema);
 
@@ -48,7 +38,7 @@ const Order = mongoose.model('Order', new mongoose.Schema({
     date: { type: Date, default: Date.now }
 }));
 
-// --- 4. ASOSIY YO'LLAR (ROUTES) ---
+// --- 3. ASOSIY YO'LLAR (ROUTES) ---
 
 app.get('/', (req, res) => {
     res.send("Server muvaffaqiyatli ishlayapti! 🚀");
@@ -56,10 +46,6 @@ app.get('/', (req, res) => {
 
 // RO'YXATDAN O'TISH
 app.post('/register', async (req, res) => {
-    if (mongoose.connection.readyState !== 1) {
-        return res.status(503).json({ error: "Baza bilan aloqa o'rnatilmoqda. Iltimos, qayta urinib ko'ring." });
-    }
-
     try {
         const { name, email, password } = req.body;
 
@@ -77,23 +63,24 @@ app.post('/register', async (req, res) => {
 
         const newUser = new User({ name, email, password: hashedPassword, lastSeen: new Date() });
         await newUser.save();
-        res.status(201).json({ message: "Muvaffaqiyatli ro'yxatdan o'tdingiz! ✅" });
+        
+        return res.status(201).json({ message: "Muvaffaqiyatli ro'yxatdan o'tdingiz! ✅" });
     } catch (error) {
         console.error("Register xatosi:", error);
-        res.status(500).json({ error: "Serverda xatolik yuz berdi." });
+        return res.status(500).json({ error: "Serverda xatolik yuz berdi: " + error.message });
     }
 });
 
-// LOGIN (Har safar login qilganda faollik vaqti yangilanadi)
+// LOGIN
 app.post('/login', async (req, res) => {
-    if (mongoose.connection.readyState !== 1) {
-        return res.status(503).json({ error: "Baza bilan aloqa o'rnatilmoqda. Bir ozdan keyin qayta urinib ko'ring." });
-    }
-
     try {
         const { email, password } = req.body;
-        const user = await User.findOne({ email });
         
+        if (!email || !password) {
+            return res.status(400).json({ error: "Email va parolni kiriting!" });
+        }
+
+        const user = await User.findOne({ email });
         if (!user) {
             return res.status(401).json({ error: "Email yoki parol noto'g'ri!" });
         }
@@ -103,18 +90,17 @@ app.post('/login', async (req, res) => {
             return res.status(401).json({ error: "Email yoki parol noto'g'ri!" });
         }
 
-        // Faollikni yangilash
         user.lastSeen = new Date();
         await user.save();
 
-        res.status(200).json({ 
+        return res.status(200).json({ 
             message: "Xush kelibsiz!", 
             userName: user.name, 
             userEmail: user.email 
         });
     } catch (error) {
         console.error("Login xatosi:", error);
-        res.status(500).json({ error: "Serverda xatolik." });
+        return res.status(500).json({ error: "Serverda xatolik: " + error.message });
     }
 });
 
@@ -148,7 +134,7 @@ app.get('/api/user/:email', async (req, res) => {
     try {
         const user = await User.findOneAndUpdate(
             { email: req.params.email }, 
-            { lastSeen: new Date() }, // Profilga kirganda ham faollik yangilanadi
+            { lastSeen: new Date() },
             { new: true, projection: { password: 0 } }
         );
         if (!user) return res.status(404).json({ error: "Foydalanuvchi topilmadi" });
@@ -169,18 +155,16 @@ app.get('/api/orders/:userName', async (req, res) => {
     }
 });
 
-// --- 5. STATISTIKA VA RO'YXATLAR (REAL VAQTDA) ---
-
+// STATISTIKA VA RO'YXATLAR
 app.get('/api/stats', async (req, res) => {
     try {
-        // Oxirgi 5 daqiqa ichida faol bo'lganlar - "Onlayn" hisoblanadi
         const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
 
         const [totalUsers, totalOrders, totalMessages, activeNow] = await Promise.all([
             User.countDocuments(),
             Order.countDocuments(),
             Message.countDocuments(),
-            User.countDocuments({ lastSeen: { $gte: fiveMinutesAgo } }) // Real onlayn
+            User.countDocuments({ lastSeen: { $gte: fiveMinutesAgo } })
         ]);
 
         res.json({
@@ -196,7 +180,6 @@ app.get('/api/stats', async (req, res) => {
     }
 });
 
-// Onlayn foydalanuvchilar ro'yxati
 app.get('/api/online-users', async (req, res) => {
     try {
         const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
@@ -238,8 +221,18 @@ app.get('/api/all-messages', async (req, res) => {
     }
 });
 
-// --- 6. SERVERNI YOQISH ---
+// --- 4. BAZAGA ULANIB, KEYIN SERVERNI YOQISH ---
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => {
-    console.log(`Server ishlamoqda: Port ${PORT} 🚀`);
-});
+const dbURI = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb+srv://idasturiy_db_user:zohidjon_6666@cluster0.sfpoqxq.mongodb.net/rentcar_db?retryWrites=true&w=majority';
+
+mongoose.connect(dbURI)
+    .then(() => {
+        console.log("Bulutli baza (MongoDB Atlas) bilan aloqa o'rnatildi! ✅");
+        app.listen(PORT, () => {
+            console.log(`Server ishlamoqda: Port ${PORT} 🚀`);
+        });
+    })
+    .catch(err => {
+        console.error("❌ BAZADA XATO:");
+        console.error(err.message);
+    });

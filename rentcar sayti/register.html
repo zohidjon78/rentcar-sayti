@@ -237,7 +237,8 @@
         regBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Yuborilmoqda...';
 
         try {
-            const response = await ('https://rentcar-backend-dnq1.onrender.com/register', {
+            // BU YERDA FETCH SO'ZI TO'G'RILANDI ✅
+            const response = await fetch('https://rentcar-backend-dnq1.onrender.com/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, email, password })
@@ -249,7 +250,7 @@
                 alert("Muvaffaqiyatli ro'yxatdan o'tdingiz! Endi tizimga kiring.");
                 window.location.href = "login.html"; 
             } else {
-                alert(data.error || "Ro'yxatdan o'tishda xatolik!");
+                alert(data.error || data.message || "Ro'yxatdan o'tishda xatolik!");
                 regBtn.disabled = false;
                 regBtn.innerHTML = "Ro'yxatdan o'tish";
             }
