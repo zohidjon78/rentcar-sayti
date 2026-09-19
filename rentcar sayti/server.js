@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // --- 2. MONGODB BAZASIGA ULANISH ---
-const dbURI = process.env.MONGODB_URI || 'mongodb://idasturiy_db_user:zohidjon_6666@ac-65knuok-shard-00-00.sfpoqxq.mongodb.net:27017,ac-65knuok-shard-00-01.sfpoqxq.mongodb.net:27017,ac-65knuok-shard-00-02.sfpoqxq.mongodb.net:27017/?ssl=true&replicaSet=atlas-12zs5s-shard-0&authSource=admin&appName=Cluster0';
+const dbURI = process.env.MONGODB_URI || 'const dbURI = process.env.MONGODB_URI || 'mongodb+srv://idasturiy_db_user:zohidjon_6666@cluster0.sfpoqxq.mongodb.net/rentcar_db?retryWrites=true&w=majority';';
 
 // Mongoose ulanish parametrlari (family: 4 Render IPv6 muammosini hal qiladi)
 mongoose.connect(dbURI)
