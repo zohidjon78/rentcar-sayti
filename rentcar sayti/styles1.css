@@ -1,0 +1,322 @@
+:root {
+    --primary-color: #E60023; 
+    --accent-yellow: #ffcc00; /* Sariq rang effekti uchun */
+    --dark-nav: #0a0a0a;     
+    --light-bg: #ffffff;
+    --text-dark: #1a1a1a;
+    --text-gray: #555555;
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--light-bg);
+    color: var(--text-dark);
+    margin: 0;
+    overflow-x: hidden;
+}
+
+/* --- 1. Navbar: Biroz kattaroq va Sariq effektli --- */
+.custom-header {
+    background: var(--dark-nav);
+    padding: 12px 0; 
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.header-logo-img {
+    height: 38px; 
+    width: auto;
+    object-fit: contain;
+}
+
+.logo-brand {
+    font-size: 1.4rem; 
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.logo-brand span {
+    color: var(--primary-color);
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 30px; 
+    margin: 0;
+    padding: 0;
+    align-items: center; /* Elementlarni bir chiziqda tekislaydi */
+}
+
+.nav-menu a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem; 
+    text-transform: uppercase;
+    position: relative; 
+    transition: var(--transition);
+    padding-bottom: 5px;
+}
+
+/* Sichqoncha borganda matn sariq bo'lishi */
+.nav-menu a:hover, .nav-menu a.active {
+    color: var(--accent-yellow) !important;
+}
+
+/* Pastdan sariq chiziq chizilishi effekti (Sign Up tugmasidan tashqari) */
+.nav-menu a:not(.signup-btn)::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--accent-yellow);
+    transition: width 0.3s ease;
+}
+
+.nav-menu a:not(.signup-btn):hover::after, 
+.nav-menu a.active:not(.signup-btn)::after {
+    width: 100%;
+}
+
+/* --- 2. RO'YXATDAN O'TISH TUGMASI (YANGI QO'SHILDI) --- */
+.signup-btn {
+    background-color: var(--primary-color); /* Qizil fon */
+    color: white !important;
+    padding: 8px 20px !important;
+    border-radius: 50px;
+    border: 2px solid var(--primary-color);
+    font-weight: 700 !important;
+    margin-left: 10px;
+    text-transform: uppercase;
+    font-size: 0.85rem !important;
+}
+
+.signup-btn:hover {
+    background-color: var(--accent-yellow) !important; /* Hoverda sariq bo'ladi */
+    border-color: var(--accent-yellow) !important;
+    color: black !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 204, 0, 0.4);
+}
+
+/* Tugma tagida chiziq chiqishini o'chirish */
+.signup-btn::after {
+    display: none !important;
+}
+
+/* --- 3. Hero Section: Orqa rasm bilan --- */
+.about-hero {
+    position: relative;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                url('https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=2070&auto=format&fit=crop'); 
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: white;
+    text-align: center;
+}
+
+.about-hero h1 {
+    font-size: 4rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    text-shadow: 2px 4px 10px rgba(0,0,0,0.3);
+}
+
+.about-hero p {
+    font-size: 1.3rem;
+    opacity: 0.9;
+    font-weight: 300;
+}
+
+/* --- 4. Content Area: Toza va Yorqin --- */
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: var(--text-dark);
+    border-left: 5px solid var(--primary-color);
+    padding-left: 20px;
+}
+
+.text-muted {
+    font-size: 1.1rem;
+    color: var(--text-gray) !important;
+    line-height: 1.8;
+}
+
+.stat-box {
+    background: #ffffff;
+    padding: 40px 20px;
+    border-radius: 20px;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+    transition: var(--transition);
+}
+
+.stat-box:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+}
+
+.stat-box h3 {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.feature-card {
+    background: #fbfbfb;
+    padding: 50px 30px;
+    border-radius: 25px;
+    text-align: center;
+    height: 100%;
+    border: 1px solid transparent;
+    transition: var(--transition);
+}
+
+.feature-card:hover {
+    background: #ffffff;
+    border-color: #eee;
+    box-shadow: 0 15px 45px rgba(0,0,0,0.07);
+}
+
+.feature-card i {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+/* --- 5. Video --- */
+.video-container-wrapper {
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+    margin-top: 30px;
+}
+
+/* --- 6. Footer --- */
+.modern-footer {
+    background: var(--dark-nav);
+    color: white;
+    padding: 80px 0 40px;
+    margin-top: 100px;
+}
+
+.footer-title {
+    color: #ffffff;
+    font-weight: 600;
+    margin-bottom: 25px;
+    font-size: 1.2rem;
+}
+
+.footer-socials a {
+    color: #fff;
+    font-size: 1.4rem;
+    margin-right: 20px;
+    transition: var(--transition);
+}
+
+.footer-socials a:hover {
+    color: var(--accent-yellow); 
+    transform: scale(1.2);
+}
+
+.badge.rounded-pill {
+    background: rgba(255,255,255,0.05) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    padding: 10px 20px;
+    transition: var(--transition);
+}
+
+.badge.rounded-pill:hover {
+    background: var(--accent-yellow) !important;
+    color: black !important;
+}
+
+/* --- Responsive Mukammallashtirish --- */
+@media (max-width: 768px) {
+    /* 1. Navbarni markazlashtirish va elementlarni pastga tushirish */
+    .navbar {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .nav-menu { 
+        gap: 15px;
+        flex-wrap: wrap; /* Elementlar sig'masa pastga tushadi */
+        justify-content: center;
+    } 
+
+    /* 2. Sarlavhalarni ekran o'lchamiga moslash (clamp funksiyasi juda qulay) */
+    .about-hero h1 { 
+        font-size: clamp(2rem, 10vw, 3rem); 
+        line-height: 1.2;
+    }
+
+    .about-hero { 
+        height: auto; 
+        padding: 100px 20px; /* Balandlikni rasmga qarab emas, kontentga qarab moslash */
+        background-attachment: scroll; /* Mobilda parallaks batareyani ko'p yeydi, scroll yaxshi */
+    }
+
+    /* 3. Stat-boxlarni telefonda bittadan chiqarish */
+    .stat-box {
+        margin-bottom: 20px;
+        padding: 30px 15px;
+    }
+
+    .stat-box h3 {
+        font-size: 2.5rem;
+    }
+
+    /* 4. Tugmani butun ekran bo'ylab qilish (qulaylik uchun) */
+    .signup-btn {
+        width: 100%;
+        margin-left: 0;
+        text-align: center;
+    }
+
+    /* 5. Section titlelarni kichraytirish */
+    .section-title {
+        font-size: 1.8rem;
+        padding-left: 15px;
+    }
+}
+
+/* Juda kichik ekranlar uchun (iPhone 5/SE kabi) */
+@media (max-width: 480px) {
+    .nav-menu {
+        gap: 10px;
+    }
+    .nav-menu a {
+        font-size: 0.8rem;
+    }
+}

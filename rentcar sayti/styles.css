@@ -1,0 +1,306 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* 1. Logotip va navigatsiya qismlari */
+.header-logo-img {
+    height: 40px; 
+    width: auto; 
+    vertical-align: middle; 
+    margin-right: clamp(10px, 3vw, 30px); /* Ekran kichrayganda masofa ham kamayadi */
+}
+
+.navbar .logo { 
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    color: white;
+    font-weight: bold;
+    display: flex; 
+    align-items: center; 
+    padding: 0; 
+    margin: 0;
+}
+
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* --- BODY FONIGA RASM --- */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(rgba(245, 247, 250, 0.85), rgba(245, 247, 250, 0.85)), 
+                url('https://images.unsplash.com/photo-1486497395442-885e219fbf0a?q=80&w=2070&auto=format&fit=crop'); 
+    background-attachment: fixed; 
+    background-size: cover;
+    background-position: center;
+    color: #333;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* Loader */
+#loader {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: #000 url('loader.gif') no-repeat center center;
+    z-index: 1000;
+}
+
+/* Header */
+header {
+    background-color: #111;
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    width: 100%;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo {
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
+    color: white;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+/* --- NAVIGATSIYA --- */
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: clamp(1rem, 2vw, 2rem);
+    align-items: center;
+}
+
+.nav-links a {
+    color: #fff;
+    text-decoration: none;
+    font-size: clamp(0.8rem, 2vw, 0.95rem);
+    font-weight: 500;
+    position: relative;
+    transition: color 0.3s;
+    white-space: nowrap; /* Matn pastga tushib ketmasligi uchun */
+}
+
+/* Linklar ostidagi chiziq effekti */
+.nav-links a:not(.signup-btn)::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background: #ffd700;
+    bottom: -5px;
+    left: 0;
+    transition: width 0.3s ease;
+}
+
+.nav-links a:not(.signup-btn):hover::after,
+.nav-links a.active:not(.signup-btn)::after {
+    width: 100%;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: #ffd700;
+}
+
+/* --- SIGN UP TUGMASI --- */
+.signup-btn {
+    background: #ffd700;
+    color: #000 !important;
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    font-weight: 700 !important;
+    transition: all 0.3s ease !important;
+    border: 2px solid #ffd700;
+    display: inline-block;
+}
+
+.signup-btn:hover {
+    background: transparent !important;
+    color: #ffd700 !important;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+}
+
+/* Main */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-bottom: 2rem;
+}
+
+h2 {
+    text-align: center;
+    margin: 2rem 0;
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    color: #222;
+    font-weight: 700;
+}
+
+/* Filter */
+.filter-container {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+#filterSelect {
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px; /* iPhone zoom oldini olish uchun */
+    background-color: white;
+    width: auto;
+    min-width: 200px;
+    max-width: 100%;
+}
+
+/* Car Grid */
+.car-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.car-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+.car-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.car-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.car-card h3 {
+    margin: 1rem;
+    font-size: 1.3rem;
+}
+
+.car-card p {
+    margin: 0 1rem 1rem;
+    font-size: 0.95rem;
+    color: #555;
+    flex-grow: 1; /* Matn kam bo'lsa ham tugma pastda turadi */
+}
+
+.car-card .btn {
+    display: block;
+    text-align: center;
+    background: black;
+    color: #fff !important;
+    margin: 1rem;
+    padding: 0.8rem;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background 0.3s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.car-card .btn:hover {
+    background: #333;
+}
+
+/* Footer */
+footer {
+    background: #111;
+    color: #aaa;
+    padding: 2.5rem 1rem;
+    text-align: center;
+    width: 100%;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 1024px) {
+    .nav-container {
+        width: 95%;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        padding: 0.8rem 0;
+    }
+
+    .nav-container {
+        flex-direction: column; /* Mobilda logo tepada, menyu pastda */
+        gap: 0.8rem;
+    }
+    
+    .nav-links {
+        gap: 0.8rem;
+        flex-wrap: wrap; 
+        justify-content: center;
+        width: 100%;
+    }
+
+    .nav-links a {
+        font-size: 0.8rem;
+        padding: 4px 2px;
+    }
+
+    .signup-btn {
+        padding: 0.5rem 1rem;
+    }
+
+    .car-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        width: 95%;
+    }
+
+    .car-card img {
+        height: 180px;
+    }
+
+    h2 {
+        margin: 1.2rem 0;
+    }
+
+    #filterSelect {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    .nav-links {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr; /* Mobilda 3 qator menyu */
+        text-align: center;
+        gap: 10px;
+    }
+
+    .signup-btn {
+        grid-column: span 3; /* Ro'yxatdan o'tish tugmasi to'liq eniga */
+        margin-top: 5px;
+    }
+}
