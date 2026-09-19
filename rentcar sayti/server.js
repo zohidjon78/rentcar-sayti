@@ -16,8 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // --- 2. MONGODB BAZASIGA ULANISH ---
-const dbURI = process.env.MONGODB_URI || 'const dbURI = process.env.MONGODB_URI || 'mongodb+srv://idasturiy_db_user:zohidjon_6666@cluster0.sfpoqxq.mongodb.net/rentcar_db?retryWrites=true&w=majority';';
-
+const dbURI = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb+srv://idasturiy_db_user:zohidjon_6666@cluster0.sfpoqxq.mongodb.net/rentcar_db?retryWrites=true&w=majority';
 // Mongoose ulanish parametrlari (family: 4 Render IPv6 muammosini hal qiladi)
 mongoose.connect(dbURI)
     .then(() => console.log("Bulutli baza (MongoDB Atlas) bilan aloqa o'rnatildi! ✅"))
