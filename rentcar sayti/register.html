@@ -237,7 +237,7 @@
         regBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Yuborilmoqda...';
 
         try {
-            const response = await fetch('https://rentcar-backend-dnq1.onrender.com/register', {
+            const response = await ('https://rentcar-backend-dnq1.onrender.com/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, email, password })
