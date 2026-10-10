@@ -739,6 +739,8 @@
         e.preventDefault();
         if(confirm("Tizimdan chiqmoqchimisiz?")) {
           localStorage.removeItem('userName');
+          localStorage.removeItem('userEmail');
+          localStorage.removeItem('token');
           window.location.reload();
         }
       });

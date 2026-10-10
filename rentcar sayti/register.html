@@ -232,6 +232,22 @@
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
 
+        if (name.length < 2) {
+            alert("Iltimos, haqiqiy ismingizni kiriting!");
+            return;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            alert("Iltimos, to'g'ri email manzil kiriting! (Masalan: user@example.com)");
+            return;
+        }
+
+        if (password.length < 6) {
+            alert("Parol kamida 6 ta belgidan iborat bo'lishi kerak!");
+            return;
+        }
+
         // Yuklanish holati
         regBtn.disabled = true;
         regBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Yuborilmoqda...';

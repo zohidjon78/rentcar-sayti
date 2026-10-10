@@ -182,14 +182,19 @@
     async function fetchStats() {
         try {
             const response = await fetch(`${API_URL}/api/stats`);
+            if(!response.ok) throw new Error("Status: " + response.status);
             const data = await response.json();
             
             animate('val-users', data.users || 0);
             animate('val-orders', data.orders || 0);
             animate('val-messages', data.messages || 0);
-            animate('val-active', data.active || 0); // Endi bu random emas
+            animate('val-active', data.active || 0);
         } catch (err) { 
-            console.error("Statistika xatosi:", err); 
+            console.error("Statistika xatosi:", err);
+            const listTitle = document.getElementById('list-title');
+            if(listTitle) {
+                listTitle.innerText = "Server uyg'onmoqda, birozdan so'ng qayta yangilang...";
+            }
         }
     }
 
@@ -200,7 +205,7 @@
         const title = document.getElementById('list-title');
 
         container.style.display = 'block';
-        body.innerHTML = "<tr><td colspan='3'>Yuklanmoqda...</td></tr>";
+        body.innerHTML = "<tr><td colspan='3'><i class='fas fa-spinner fa-spin me-2'></i>Yuklanmoqda...</td></tr>";
 
         try {
             let endpoint = '';
@@ -223,10 +228,11 @@
             }
 
             const res = await fetch(`${API_URL}${endpoint}`);
+            if(!res.ok) throw new Error("Xatolik");
             const data = await res.json();
 
             if (!data || data.length === 0) {
-                body.innerHTML = "<tr><td colspan='3'>Ayni damda faol mijozlar yo'q.</td></tr>";
+                body.innerHTML = "<tr><td colspan='3'>Ayni damda ma'lumotlar yo'q.</td></tr>";
                 return;
             }
 
@@ -237,7 +243,7 @@
             }).join('');
 
         } catch (err) {
-            body.innerHTML = "<tr><td colspan='3'>Yuklashda xatolik yuz berdi.</td></tr>";
+            body.innerHTML = "<tr><td colspan='3' class='text-danger text-center'>Yuklashda xatolik yuz berdi. Server bilan aloqani tekshiring.</td></tr>";
         }
     }
 

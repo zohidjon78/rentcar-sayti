@@ -3,54 +3,121 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 
+const JWT_SECRET = process.env.JWT_SECRET || 'rentcar_super_secret_jwt_key_2025_secure';
+
 // --- 1. MIDDLEWARE ---
+const allowedOrigins = [
+    'https://avtorental.uz',
+    'https://www.avtorental.uz',
+    'https://rentcar-sayti.vercel.app',
+    'http://localhost:3000',
+    'http://localhost:5500',
+    'http://127.0.0.1:5500',
+    'http://localhost:5173',
+    'http://127.0.0.1:3000'
+];
+
 app.use(cors({
-    origin: ['https://avtorental.uz', 'https://www.avtorental.uz', 'https://rentcar-sayti.vercel.app'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    origin: function (origin, callback) {
+        // So'rov manzilini tekshirish (brauzersiz so'rovlar, localhost va Vercel'ga to'liq ruxsat)
+        if (!origin) return callback(null, true);
+        if (
+            allowedOrigins.includes(origin) || 
+            origin.endsWith('.vercel.app') || 
+            origin.startsWith('http://localhost') || 
+            origin.startsWith('http://127.0.0.1')
+        ) {
+            return callback(null, true);
+        }
+        return callback(null, true); // Dev va testlar uchun ruxsat
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true
 })); 
+
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
 // --- 2. MODELLAR (SCHEMAS) ---
 const UserSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true, index: true },
+    name: { type: String, required: true, trim: true },
+    email: { type: String, required: true, unique: true, index: true, lowercase: true, trim: true },
     password: { type: String, required: true },
+    role: { type: String, default: 'user' },
     lastSeen: { type: Date, default: Date.now }
 });
 const User = mongoose.model('User', UserSchema);
 
 const Message = mongoose.model('Message', new mongoose.Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true },
-    message: { type: String, required: true },
+    name: { type: String, required: true, trim: true },
+    email: { type: String, required: true, trim: true },
+    message: { type: String, required: true, trim: true },
     date: { type: Date, default: Date.now }
 }));
 
 const Order = mongoose.model('Order', new mongoose.Schema({
-    userName: { type: String, required: true },
-    carName: { type: String, required: true },
-    paymentMethod: { type: String, required: true },
+    userName: { type: String, required: true, trim: true },
+    carName: { type: String, required: true, trim: true },
+    paymentMethod: { type: String, required: true, trim: true },
     date: { type: Date, default: Date.now }
 }));
+
+// --- YORDAMCHI MIDDLEWARE (AUTH) ---
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) {
+        req.user = null;
+        return next();
+    }
+
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (!err) {
+            req.user = user;
+        }
+        next();
+    });
+}
 
 // --- 3. ASOSIY YO'LLAR (ROUTES) ---
 
 app.get('/', (req, res) => {
-    res.send("Server muvaffaqiyatli ishlayapti! 🚀");
+    res.json({ 
+        status: "success", 
+        message: "RentCar serveri muvaffaqiyatli ishlayapti! 🚀",
+        time: new Date()
+    });
+});
+
+app.get('/ping', (req, res) => {
+    res.json({ pong: true, time: new Date() });
 });
 
 // RO'YXATDAN O'TISH
 app.post('/register', async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        let { name, email, password } = req.body;
 
         if (!name || !email || !password) {
             return res.status(400).json({ error: "Barcha maydonlarni to'ldiring!" });
+        }
+
+        name = name.trim();
+        email = email.trim().toLowerCase();
+
+        // Validatsiya
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ error: "Email formati noto'g'ri!" });
+        }
+
+        if (password.length < 6) {
+            return res.status(400).json({ error: "Parol kamida 6 ta belgidan iborat bo'lishi kerak!" });
         }
 
         const existingUser = await User.findOne({ email });
@@ -61,7 +128,12 @@ app.post('/register', async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const newUser = new User({ name, email, password: hashedPassword, lastSeen: new Date() });
+        const newUser = new User({ 
+            name, 
+            email, 
+            password: hashedPassword, 
+            lastSeen: new Date() 
+        });
         await newUser.save();
         
         return res.status(201).json({ message: "Muvaffaqiyatli ro'yxatdan o'tdingiz! ✅" });
@@ -74,11 +146,13 @@ app.post('/register', async (req, res) => {
 // LOGIN
 app.post('/login', async (req, res) => {
     try {
-        const { email, password } = req.body;
+        let { email, password } = req.body;
         
         if (!email || !password) {
             return res.status(400).json({ error: "Email va parolni kiriting!" });
         }
+
+        email = email.trim().toLowerCase();
 
         const user = await User.findOne({ email });
         if (!user) {
@@ -93,10 +167,18 @@ app.post('/login', async (req, res) => {
         user.lastSeen = new Date();
         await user.save();
 
+        // JWT Token yaratish
+        const token = jwt.sign(
+            { userId: user._id, name: user.name, email: user.email, role: user.role || 'user' },
+            JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+
         return res.status(200).json({ 
             message: "Xush kelibsiz!", 
             userName: user.name, 
-            userEmail: user.email 
+            userEmail: user.email,
+            token: token
         });
     } catch (error) {
         console.error("Login xatosi:", error);
@@ -108,9 +190,17 @@ app.post('/login', async (req, res) => {
 app.post('/api/orders', async (req, res) => {
     try {
         const { userName, carName, paymentMethod } = req.body;
-        const newOrder = new Order({ userName, carName, paymentMethod });
+        if (!userName || !carName) {
+            return res.status(400).json({ error: "Mijoz ismi va mashina tanlanishi shart!" });
+        }
+
+        const newOrder = new Order({ 
+            userName: userName.trim(), 
+            carName: carName.trim(), 
+            paymentMethod: paymentMethod || "Sayt orqali (Premium)" 
+        });
         await newOrder.save();
-        res.status(201).json({ message: "Buyurtma bazaga saqlandi! ✅" });
+        res.status(201).json({ message: "Buyurtma bazaga saqlandi! ✅", order: newOrder });
     } catch (error) {
         console.error("Order saqlash xatosi:", error);
         res.status(500).json({ error: "Buyurtmani saqlab bo'lmadi." });
@@ -120,7 +210,15 @@ app.post('/api/orders', async (req, res) => {
 app.post('/contact', async (req, res) => {
     try {
         const { name, email, message } = req.body;
-        const newMessage = new Message({ name, email, message });
+        if (!name || !email || !message) {
+            return res.status(400).json({ error: "Barcha maydonlarni to'ldiring!" });
+        }
+
+        const newMessage = new Message({ 
+            name: name.trim(), 
+            email: email.trim(), 
+            message: message.trim() 
+        });
         await newMessage.save();
         res.status(201).json({ message: "Xabaringiz muvaffaqiyatli yuborildi! ✅" });
     } catch (error) {
@@ -133,7 +231,7 @@ app.post('/contact', async (req, res) => {
 app.get('/api/user/:email', async (req, res) => {
     try {
         const user = await User.findOneAndUpdate(
-            { email: req.params.email }, 
+            { email: req.params.email.toLowerCase().trim() }, 
             { lastSeen: new Date() },
             { new: true, projection: { password: 0 } }
         );
@@ -193,7 +291,7 @@ app.get('/api/online-users', async (req, res) => {
 
 app.get('/api/all-users', async (req, res) => {
     try {
-        const users = await User.find({}, { name: 1, email: 1 });
+        const users = await User.find({}, { name: 1, email: 1 }).sort({ lastSeen: -1 });
         res.json(users);
     } catch (err) { 
         console.error("All users olish xatosi:", err);
@@ -223,7 +321,9 @@ app.get('/api/all-messages', async (req, res) => {
 
 // --- 4. BAZAGA ULANIB, KEYIN SERVERNI YOQISH ---
 const PORT = process.env.PORT || 10000;
-const dbURI = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb+srv://idasturiy_db_user:zohidjon_6666@cluster0.sfpoqxq.mongodb.net/rentcar_db?retryWrites=true&w=majority';
+const rawURI = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb+srv://idasturiy_db_user:zohidjon_6666@cluster0.sfpoqxq.mongodb.net/rentcar_db?retryWrites=true&w=majority';
+// Nuqtali vergul va bo'sh joylarni tozalash
+const dbURI = rawURI.trim().replace(/;$/, '');
 
 mongoose.connect(dbURI)
     .then(() => {

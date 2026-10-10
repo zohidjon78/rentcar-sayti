@@ -253,6 +253,17 @@
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
 
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert("Iltimos, to'g'ri email manzil kiriting!");
+                return;
+            }
+
+            if (!password) {
+                alert("Parolni kiriting!");
+                return;
+            }
+
             // Tugmani yuklash holatiga o'tkazish
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Tekshirilmoqda...';
@@ -270,6 +281,9 @@
                     // Muvaffaqiyatli kirish
                     localStorage.setItem('userName', data.userName); 
                     localStorage.setItem('userEmail', data.userEmail || email);
+                    if (data.token) {
+                        localStorage.setItem('token', data.token);
+                    }
                     
                     alert("Xush kelibsiz, " + data.userName + "!");
                     window.location.href = "index.html"; 
@@ -310,6 +324,7 @@
                     if(confirm("Tizimdan chiqmoqchimisiz?")) {
                         localStorage.removeItem('userName');
                         localStorage.removeItem('userEmail');
+                        localStorage.removeItem('token');
                         window.location.reload();
                     }
                 };

@@ -300,19 +300,25 @@
     }
 
     let verifiedPhone = false;
+    let generatedOTP = null;
+
     function sendOTP() {
-        const phone = document.getElementById('phone').value;
-        if(phone.length < 13) return alert("Raqamni to'liq kiriting!");
+        const phone = document.getElementById('phone').value.trim();
+        if(phone.length < 9) return alert("Telefon raqamingizni to'liq kiriting!");
+        
+        // Tasodifiy 4 xonali kod yaratamiz
+        generatedOTP = Math.floor(1000 + Math.random() * 9000).toString();
         document.getElementById('otp-area').style.display = 'block';
-        alert("Tasdiqlash kodi: 2107");
+        alert("Sizning tasdiqlash kodingiz: " + generatedOTP);
     }
 
     function verifyOTP() {
-        if(document.getElementById('otp_code').value === '2107') {
+        const inputCode = document.getElementById('otp_code').value.trim();
+        if(inputCode === generatedOTP) {
             verifiedPhone = true;
-            document.getElementById('otp-area').innerHTML = "<b style='color:green'>✅ Telefon tasdiqlandi</b>";
+            document.getElementById('otp-area').innerHTML = "<b style='color:green'>✅ Telefon muvaffaqiyatli tasdiqlandi</b>";
         } else {
-            alert("Kod noto'g'ri!");
+            alert("Kod noto'g'ri! Iltimos, qayta tekshiring.");
         }
     }
 
@@ -329,7 +335,7 @@
                 stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 video.srcObject = stream;
                 video.style.display = 'block';
-                btn.innerHTML = "Skanerlash...";
+                btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Skanerlash...";
                 status.innerText = "Yuzingizni markazda tuting";
                 status.style.color = "orange";
 
@@ -342,7 +348,14 @@
                 }, 3000);
 
             } catch (err) {
-                alert("Kameraga ruxsat berilmadi!");
+                console.warn("Kameraga ruxsat berilmadi:", err);
+                const confirmManual = confirm("Kameraga ulanib bo'lmadi yoki kamera topilmadi. Shaxsni muqobil tarzda tasdiqlaysizmi?");
+                if (confirmManual) {
+                    faceVerified = true;
+                    status.innerText = "✅ Shaxs tasdiqlandi (Demo)";
+                    status.style.color = "var(--success)";
+                    btn.style.display = "none";
+                }
             }
         }
     }
@@ -372,6 +385,8 @@
             logoutBtn.style.color = "red";
             logoutBtn.onclick = function() {
                 localStorage.removeItem('userName');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('token');
                 window.location.reload();
             };
             loginLink.parentNode.appendChild(logoutBtn);

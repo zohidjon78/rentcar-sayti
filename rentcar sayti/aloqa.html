@@ -149,6 +149,8 @@
             logoutBtn.style.color = "red";
             logoutBtn.onclick = function() {
                 localStorage.removeItem('userName');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('token');
                 window.location.reload();
             };
             loginLink.parentNode.appendChild(logoutBtn);

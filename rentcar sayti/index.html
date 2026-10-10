@@ -353,6 +353,8 @@
 
         function logout() {
             localStorage.removeItem('userName');
+            localStorage.removeItem('userEmail');
+            localStorage.removeItem('token');
             window.location.reload();
         }
 
