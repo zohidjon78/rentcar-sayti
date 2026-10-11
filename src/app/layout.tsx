@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'AvtoRental.uz | Zamonaviy Avtomobil Ijarasi',
   description: "O'zbekistonda eng tezkor, qulay va arzon avtomobil ijarasi xizmati. Malibu, Captiva, Kia K5, Gentra va boshqa avtomobillarni onlayn bron qiling.",
-  metadataBase: new URL('https://avtorental.uz'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://rentcar-sayti.vercel.app'),
 };
 
 export default function RootLayout({

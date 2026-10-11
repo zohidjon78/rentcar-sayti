@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGO_URI || 'mongodb+srv://idasturiy_db_user:zohidjon_6666@cluster0.sfpoqxq.mongodb.net/rentcar_db?retryWrites=true&w=majority';
+const MONGODB_URI = process.env.MONGO_URI || '';
 
 if (!MONGODB_URI) {
-  throw new Error("Iltimos, .env faylida MONGO_URI ni belgilang");
+  throw new Error("Iltimos, MONGO_URI environment variable ni belgilang (Vercel Settings > Environment Variables)");
 }
 
 interface MongooseCache {
@@ -32,7 +32,7 @@ export async function connectToDatabase(): Promise<typeof mongoose> {
       bufferCommands: false,
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI.trim().replace(/;$/, ''), opts).then((mongooseInstance) => {
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongooseInstance) => {
       console.log("MongoDB Atlas bilan muvaffaqiyatli bog'landi! ✅");
       return mongooseInstance;
     });
