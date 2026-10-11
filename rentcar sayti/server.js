@@ -4,43 +4,25 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const path = require('path');
 
 const app = express();
 
 const JWT_SECRET = process.env.JWT_SECRET || 'rentcar_super_secret_jwt_key_2025_secure';
 
 // --- 1. MIDDLEWARE ---
-const allowedOrigins = [
-    'https://avtorental.uz',
-    'https://www.avtorental.uz',
-    'https://rentcar-sayti.vercel.app',
-    'http://localhost:3000',
-    'http://localhost:5500',
-    'http://127.0.0.1:5500',
-    'http://localhost:5173',
-    'http://127.0.0.1:3000'
-];
-
+// Barcha kerakli domenlarga va lokal portlarga to'liq ruxsat berish
 app.use(cors({
-    origin: function (origin, callback) {
-        // So'rov manzilini tekshirish (brauzersiz so'rovlar, localhost va Vercel'ga to'liq ruxsat)
-        if (!origin) return callback(null, true);
-        if (
-            allowedOrigins.includes(origin) || 
-            origin.endsWith('.vercel.app') || 
-            origin.startsWith('http://localhost') || 
-            origin.startsWith('http://127.0.0.1')
-        ) {
-            return callback(null, true);
-        }
-        return callback(null, true); // Dev va testlar uchun ruxsat
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    credentials: true
+    origin: true, // Har qanday ruxsat etilgan manzil, Vercel va localhost bilan muammosiz ishlash uchun
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 })); 
 
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
+
+// Statik frontend fayllarni (HTML, CSS, JS, videolar) taqdim etish
+app.use(express.static(__dirname));
 
 // --- 2. MODELLAR (SCHEMAS) ---
 const UserSchema = new mongoose.Schema({
@@ -86,7 +68,11 @@ function authenticateToken(req, res, next) {
 
 // --- 3. ASOSIY YO'LLAR (ROUTES) ---
 
+// Bosh sahifa (Brauzerda index.html ni ochadi, API orqali chaqirilsa JSON qaytaradi)
 app.get('/', (req, res) => {
+    if (req.accepts('html')) {
+        return res.sendFile(path.join(__dirname, 'index.html'));
+    }
     res.json({ 
         status: "success", 
         message: "RentCar serveri muvaffaqiyatli ishlayapti! 🚀",
@@ -245,7 +231,11 @@ app.get('/api/user/:email', async (req, res) => {
 
 app.get('/api/orders/:userName', async (req, res) => {
     try {
-        const orders = await Order.find({ userName: req.params.userName }).sort({ date: -1 });
+        const nameParam = decodeURIComponent(req.params.userName).trim();
+        // Harflar katta-kichikligidan qat'i nazar buyurtmalarni topish
+        const orders = await Order.find({ 
+            userName: { $regex: new RegExp(`^${nameParam}$`, 'i') } 
+        }).sort({ date: -1 });
         res.json(orders);
     } catch (error) {
         console.error("Orders olish xatosi:", error);
@@ -322,7 +312,6 @@ app.get('/api/all-messages', async (req, res) => {
 // --- 4. BAZAGA ULANIB, KEYIN SERVERNI YOQISH ---
 const PORT = process.env.PORT || 10000;
 const rawURI = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb+srv://idasturiy_db_user:zohidjon_6666@cluster0.sfpoqxq.mongodb.net/rentcar_db?retryWrites=true&w=majority';
-// Nuqtali vergul va bo'sh joylarni tozalash
 const dbURI = rawURI.trim().replace(/;$/, '');
 
 mongoose.connect(dbURI)
@@ -330,6 +319,7 @@ mongoose.connect(dbURI)
         console.log("Bulutli baza (MongoDB Atlas) bilan aloqa o'rnatildi! ✅");
         app.listen(PORT, () => {
             console.log(`Server ishlamoqda: Port ${PORT} 🚀`);
+            console.log(`Brauzer orqali ochish: http://localhost:${PORT}`);
         });
     })
     .catch(err => {

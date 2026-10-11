@@ -242,9 +242,9 @@
         </div>
     </div>
 
+    <script src="api-config.js"></script>
     <script>
-        // 🛠️ BACKEND URL SOZLAMASI
-        const API_URL = 'https://rentcar-backend-dnq1.onrender.com';
+        const API_URL = window.API_BASE_URL || 'https://rentcar-backend-dnq1.onrender.com';
 
         document.getElementById('loginForm').addEventListener('submit', async function(event) {
             event.preventDefault();

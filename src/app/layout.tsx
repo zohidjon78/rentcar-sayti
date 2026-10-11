@@ -1,0 +1,31 @@
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+
+const inter = Inter({ subsets: ['latin'] });
+
+export const metadata: Metadata = {
+  title: 'AvtoRental.uz | Zamonaviy Avtomobil Ijarasi',
+  description: "O'zbekistonda eng tezkor, qulay va arzon avtomobil ijarasi xizmati. Malibu, Captiva, Kia K5, Gentra va boshqa avtomobillarni onlayn bron qiling.",
+  metadataBase: new URL('https://avtorental.uz'),
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="uz" className="scroll-smooth">
+      <body className={`${inter.className} bg-slate-900 text-slate-100 flex flex-col min-h-screen`}>
+        <Navbar />
+        <main className="flex-grow pt-20">
+          {children}
+        </main>
+        <Footer />
+      </body>
+    </html>
+  );
+}

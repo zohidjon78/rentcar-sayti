@@ -290,6 +290,7 @@
     </a>
 </div>
 
+<script src="api-config.js"></script>
 <script>
     // 1. Mashina nomini URL'dan olish
     const car = new URLSearchParams(window.location.search).get('car') || "Noma'lum";
@@ -344,7 +345,8 @@
             }
 
             // SERVERGA SO'ROV YUBORISH
-            const response = await fetch('https://rentcar-backend-dnq1.onrender.com/api/orders', {
+            const apiUrl = (window.API_BASE_URL || '') + '/api/orders';
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: headers,
                 body: JSON.stringify({

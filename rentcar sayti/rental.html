@@ -370,6 +370,11 @@
 
     window.onload = function() {
         const user = localStorage.getItem('userName');
+        if (!user) {
+            alert("Iltimos, mashina ijarasi uchun avval tizimga kiring!");
+            window.location.href = "login.html";
+            return;
+        }
         const loginLink = document.querySelector('a[href="login.html"]');
 
         if (user && loginLink) {
